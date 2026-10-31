@@ -9,7 +9,7 @@ homepage.workspace = true
 readme.workspace = true
 keywords.workspace = true
 categories.workspace = true
-rust-version.workspace = true
+rust-version = "1.95"
 description = "Iron Text Processor — Graphical User Interface"
 
 [[bin]]
@@ -22,4 +22,4 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 anyhow = { workspace = true }
 regex = { workspace = true }
-eframe = "0.31"
+eframe = "0.37"

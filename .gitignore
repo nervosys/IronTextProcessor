@@ -28,7 +28,6 @@ Desktop.ini
 *.pdb
 
 # Package manager
-Cargo.lock
 
 # Coverage
 *.profraw

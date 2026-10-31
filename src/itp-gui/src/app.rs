@@ -433,9 +433,9 @@ impl ItpGuiApp {
 }
 
 impl eframe::App for ItpGuiApp {
-    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+    fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
         // Top panel with tabs
-        egui::TopBottomPanel::top("tabs").show(ctx, |ui| {
+        egui::Panel::top("tabs").show(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.selectable_value(&mut self.active_tab, GuiTab::Search, "🔍 Search");
                 ui.selectable_value(&mut self.active_tab, GuiTab::Transform, "✏️ Transform");
@@ -449,7 +449,7 @@ impl eframe::App for ItpGuiApp {
         });
 
         // Bottom panel with status
-        egui::TopBottomPanel::bottom("status").show(ctx, |ui| {
+        egui::Panel::bottom("status").show(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.label(&self.status_message);
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
@@ -459,9 +459,9 @@ impl eframe::App for ItpGuiApp {
         });
 
         // Left panel with settings
-        egui::SidePanel::left("settings")
-            .default_width(300.0)
-            .show(ctx, |ui| {
+        egui::Panel::left("settings")
+            .default_size(300.0)
+            .show(ui, |ui| {
                 ui.heading("Settings");
                 ui.separator();
 
@@ -564,7 +564,7 @@ impl eframe::App for ItpGuiApp {
             });
 
         // Central panel with results
-        egui::CentralPanel::default().show(ctx, |ui| {
+        egui::CentralPanel::default().show(ui, |ui| {
             match self.active_tab {
                 GuiTab::Search => {
                     ui.heading(format!(
