@@ -4,26 +4,26 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/nervosys/AgenticTextProcessor
-cd AgenticTextProcessor
+git clone https://github.com/nervosys/IronTextProcessor
+cd IronTextProcessor
 
 # Build all binaries
 cargo build --release
 
 # Install CLI
-cargo install --path src/atp-cli
+cargo install --path src/itp-cli
 
 # Install TUI
-cargo install --path src/atp-tui
+cargo install --path src/itp-tui
 
 # Install GUI
-cargo install --path src/atp-gui
+cargo install --path src/itp-gui
 
 # Install LSP server
-cargo install --path src/atp-lsp
+cargo install --path src/itp-lsp
 ```
 
-Binaries produced: `atp`, `atp-grep`, `atp-sed`, `atp-awk`, `atp-tui`, `atp-gui`, `atp-lsp`.
+Binaries produced: `itp`, `itp-grep`, `itp-sed`, `itp-awk`, `itp-tui`, `itp-gui`, `itp-lsp`.
 
 ## Shell Completions
 
@@ -31,16 +31,16 @@ Generate completions for your shell:
 
 ```bash
 # Bash
-atp completions bash > ~/.local/share/bash-completion/completions/atp
+itp completions bash > ~/.local/share/bash-completion/completions/itp
 
 # Zsh
-atp completions zsh > ~/.zfunc/_atp
+itp completions zsh > ~/.zfunc/_itp
 
 # Fish
-atp completions fish > ~/.config/fish/completions/atp.fish
+itp completions fish > ~/.config/fish/completions/itp.fish
 
 # PowerShell
-atp completions powershell > $PROFILE.CurrentUserAllHosts
+itp completions powershell > $PROFILE.CurrentUserAllHosts
 ```
 
 ## Man Pages
@@ -49,17 +49,17 @@ Generate man pages:
 
 ```bash
 # Single page to stdout
-atp manpage
+itp manpage
 
 # All pages to a directory
-atp manpage --dir /usr/local/share/man/man1
+itp manpage --dir /usr/local/share/man/man1
 ```
 
 ## WASM (Browser)
 
 ```bash
 # Build the WASM package
-cd src/atp-wasm
+cd src/itp-wasm
 wasm-pack build --target web
 ```
 

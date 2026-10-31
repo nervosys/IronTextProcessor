@@ -5,7 +5,7 @@ Transform text using substitution, deletion, insertion, and transliteration.
 ## Usage
 
 ```bash
-atp transform <EXPRESSION> [PATHS...] [OPTIONS]
+itp transform <EXPRESSION> [PATHS...] [OPTIONS]
 ```
 
 ## Expression Syntax
@@ -33,19 +33,19 @@ atp transform <EXPRESSION> [PATHS...] [OPTIONS]
 
 ```bash
 # Preview a substitution
-atp transform 's/foo/bar/g' src/
+itp transform 's/foo/bar/g' src/
 
 # Apply changes
-atp transform 's/old_api/new_api/g' src/ --apply --recursive
+itp transform 's/old_api/new_api/g' src/ --apply --recursive
 
 # Delete blank lines
-atp transform 'd/^$/' file.txt --apply
+itp transform 'd/^$/' file.txt --apply
 
 # Multiple expressions
-atp transform 's/a/b/g' -e 's/c/d/g' file.txt
+itp transform 's/a/b/g' -e 's/c/d/g' file.txt
 
 # Address range (between START and END patterns)
-atp transform 's/x/y/g' file.txt --address 'BEGIN,END'
+itp transform 's/x/y/g' file.txt --address 'BEGIN,END'
 ```
 
 ## Output Schema

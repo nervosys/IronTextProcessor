@@ -1,15 +1,15 @@
 <p align="center">
-  <img src="media/banner_logo.png" alt="ATP logo" width="100%">
+  <img src="media/banner_logo.png" alt="ITP logo" width="100%">
 </p>
 
-[![Version](https://img.shields.io/badge/version-2.0.0-blue)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-3.0.0-blue)](CHANGELOG.md)
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0--only-blue)](LICENSE)
 [![Rust](https://img.shields.io/badge/rust-1.75%2B-orange)](https://www.rust-lang.org)
 [![Tests](https://img.shields.io/badge/tests-1235%20passing-brightgreen)](#testing)
 
 <h3 align="center">Agentic-first single-program successor to the `grep`, `sed`, `awk` triad.</h3>
 
-ATP is designed from the ground up for AI agent operation while remaining fully usable by humans through CLI, TUI, GUI, WebAssembly, and Language Server Protocol interfaces.
+ITP is designed from the ground up for AI agent operation while remaining fully usable by humans through CLI, TUI, GUI, WebAssembly, and Language Server Protocol interfaces.
 
 ### v2.0.0 Highlights
 
@@ -78,13 +78,13 @@ ATP is designed from the ground up for AI agent operation while remaining fully 
 
 ---
 
-## Why ATP?
+## Why ITP?
 
 Traditional Unix text tools (`grep`, `sed`, `awk`) — born at Bell Labs in the 1970s — remain the most powerful text processing trinity on Unix systems. Ken Thompson's grep (1973), Lee McMahon's sed (1977), and Aho, Weinberger & Kernighan's awk (1977) follow the Unix philosophy of small, composable tools. But they were designed for human terminals and shell pipes, producing unstructured text that AI agents cannot reliably parse.
 
-ATP inherits the battle-tested semantics of grep/sed/awk and adds **strongly typed, deterministic, schema-validated output** that AI agents can reliably consume and reason over.
+ITP inherits the battle-tested semantics of grep/sed/awk and adds **strongly typed, deterministic, schema-validated output** that AI agents can reliably consume and reason over.
 
-| Feature          | grep/sed/awk        | **ATP**                                       |
+| Feature          | grep/sed/awk        | **ITP**                                       |
 | ---------------- | ------------------- | --------------------------------------------- |
 | Output format    | Unstructured text   | **Strongly typed JSON/YAML/CSV**              |
 | Self-description | Man pages           | **Machine-readable ontology**                 |
@@ -105,28 +105,28 @@ ATP inherits the battle-tested semantics of grep/sed/awk and adds **strongly typ
 cargo build --release
 
 # Install CLI
-cargo install --path src/atp-cli
+cargo install --path src/itp-cli
 
 # Install TUI
-cargo install --path src/atp-tui
+cargo install --path src/itp-tui
 
 # Install GUI
-cargo install --path src/atp-gui
+cargo install --path src/itp-gui
 
 # Build WASM package (requires wasm-pack)
-wasm-pack build src/atp-wasm --target web
+wasm-pack build src/itp-wasm --target web
 
 # Generate shell completions (bash, zsh, fish, powershell, elvish)
-atp completions bash > ~/.local/share/bash-completion/completions/atp
-atp completions zsh > ~/.zfunc/_atp
-atp completions fish > ~/.config/fish/completions/atp.fish
-atp completions powershell > atp.ps1
+itp completions bash > ~/.local/share/bash-completion/completions/itp
+itp completions zsh > ~/.zfunc/_itp
+itp completions fish > ~/.config/fish/completions/itp.fish
+itp completions powershell > itp.ps1
 
 # Generate man pages
-atp manpage /usr/local/share/man/man1/
+itp manpage /usr/local/share/man/man1/
 ```
 
-Binaries produced: `atp`, `atp-grep`, `atp-sed`, `atp-awk`, `atp-tui`, `atp-gui`
+Binaries produced: `itp`, `itp-grep`, `itp-sed`, `itp-awk`, `itp-tui`, `itp-gui`
 
 ### Cross-Platform Support
 
@@ -151,100 +151,100 @@ Pre-built binaries are available for:
 
 ```bash
 # 1. Discover capabilities (always start here)
-atp ontology --format json
+itp ontology --format json
 
 # 2. Get schema for a specific command
-atp ontology -c search --format json
+itp ontology -c search --format json
 
 # 3. Validate a pattern before use
-atp validate -t pattern 'fn\s+\w+'
+itp validate -t pattern 'fn\s+\w+'
 
 # 4. Search with structured output
-atp search 'fn\s+\w+' src/ --include '*.rs' --format json
+itp search 'fn\s+\w+' src/ --include '*.rs' --format json
 
 # 5. Preview a transformation (dry run)
-atp transform -e 's/old_name/new_name/g' src/ --format json
+itp transform -e 's/old_name/new_name/g' src/ --format json
 
 # 6. Execute a pipeline
-atp pipeline -e 'search:TODO | filter:FIXME | count' src/ --format json
+itp pipeline -e 'search:TODO | filter:FIXME | count' src/ --format json
 ```
 
 ### For Humans
 
 ```bash
 # Search (like grep, but better)
-atp search 'TODO|FIXME' src/ --context 2
+itp search 'TODO|FIXME' src/ --context 2
 
 # Transform (like sed, but safer — dry-run by default)
-atp transform -e 's/foo/bar/g' src/
+itp transform -e 's/foo/bar/g' src/
 
 # Apply transformation
-atp transform -e 's/foo/bar/g' src/ --in-place --backup bak
+itp transform -e 's/foo/bar/g' src/ --in-place --backup bak
 
 # Analyze (like awk)
-atp analyze -F ',' -f '1,3' --aggregate 'count' data.csv
+itp analyze -F ',' -f '1,3' --aggregate 'count' data.csv
 
 # Pipeline
-atp pipeline -e 'search:import | sort | unique' src/
+itp pipeline -e 'search:import | sort | unique' src/
 
 # Interactive TUI
-atp-tui
+itp-tui
 
 # Desktop GUI
-atp-gui
+itp-gui
 
 # Interactive REPL
-atp repl
+itp repl
 
 # Watch mode
-atp watch 'find "error"' logs/
+itp watch 'find "error"' logs/
 ```
 
 ---
 
 ## POSIX Compatibility — Drop-In Replacements
 
-ATP ships with `atp-grep`, `atp-sed`, and `atp-awk` — standalone binaries that accept **traditional POSIX flag syntax** but produce **typed structured output**. Use your existing muscle memory while gaining typed JSON/YAML/CSV output with provenance metadata.
+ITP ships with `itp-grep`, `itp-sed`, and `itp-awk` — standalone binaries that accept **traditional POSIX flag syntax** but produce **typed structured output**. Use your existing muscle memory while gaining typed JSON/YAML/CSV output with provenance metadata.
 
 ```bash
 # grep-compatible (typed output when piped, human-readable in TTY)
-atp-grep -i -r 'TODO|FIXME' src/
-atp-grep -c 'error' *.log
-atp-grep -e 'foo' -e 'bar' --include='*.rs' src/
-echo "hello world" | atp-grep 'hello'
+itp-grep -i -r 'TODO|FIXME' src/
+itp-grep -c 'error' *.log
+itp-grep -e 'foo' -e 'bar' --include='*.rs' src/
+echo "hello world" | itp-grep 'hello'
 
 # sed-compatible (dry-run by default, use -i for in-place)
-atp-sed 's/old/new/g' file.txt
-atp-sed -i.bak 's/debug/release/g' *.rs
-atp-sed -e 's/a/b/' -e 's/c/d/' file.txt
-echo "hello" | atp-sed 's/hello/world/'
+itp-sed 's/old/new/g' file.txt
+itp-sed -i.bak 's/debug/release/g' *.rs
+itp-sed -e 's/a/b/' -e 's/c/d/' file.txt
+echo "hello" | itp-sed 's/hello/world/'
 
 # awk-compatible
-atp-awk -F ',' '{print $1, $3}' data.csv
-atp-awk '/error/ {print $2}' log.txt
-atp-awk '{sum += $2} END {print sum}' numbers.txt
-echo "a b c" | atp-awk '{print $2}'
+itp-awk -F ',' '{print $1, $3}' data.csv
+itp-awk '/error/ {print $2}' log.txt
+itp-awk '{sum += $2} END {print sum}' numbers.txt
+echo "a b c" | itp-awk '{print $2}'
 
 # Force JSON output (for agents)
-atp-grep --format json -r 'pattern' src/ | jq '.data.total_matches'
+itp-grep --format json -r 'pattern' src/ | jq '.data.total_matches'
 ```
 
 | Binary     | POSIX Equivalent | Output                     |
 | ---------- | ---------------- | -------------------------- |
-| `atp-grep` | `grep`           | `SearchResults` (typed)    |
-| `atp-sed`  | `sed`            | `TransformResults` (typed) |
-| `atp-awk`  | `awk`            | `AnalysisResults` (typed)  |
+| `itp-grep` | `grep`           | `SearchResults` (typed)    |
+| `itp-sed`  | `sed`            | `TransformResults` (typed) |
+| `itp-awk`  | `awk`            | `AnalysisResults` (typed)  |
 
 ---
 
-## AQL — ATP Query Language
+## AQL — ITP Query Language
 
 AQL is a **unified, keyword-based query language** that replaces the fragmented regex-heavy syntaxes of `grep`, `sed`, and `awk` with a single composable language. AQL is jointly optimized for AI agents and humans.
 
 ```bash
 # Instead of: grep -i 'error' *.log | awk -F'|' '{print $3}' | sort | uniq -c | sort -rn | head -10
 # Write:
-atp query 'find "error" ignore_case | set separator "|" | select fields 3 | sort | unique | take 10'
+itp query 'find "error" ignore_case | set separator "|" | select fields 3 | sort | unique | take 10'
 ```
 
 ### Why AQL?
@@ -261,19 +261,19 @@ atp query 'find "error" ignore_case | set separator "|" | select fields 3 | sort
 
 ```bash
 # Literal search (strings default — no escaping needed)
-atp query 'find "hello world"'
+itp query 'find "hello world"'
 
 # Regex search (opt-in with /…/)
-atp query 'find /fn\s+\w+/'
+itp query 'find /fn\s+\w+/'
 
 # Pipeline: find → sort → unique → take first 10
-atp query 'find "TODO" | sort | unique | take 10' src/
+itp query 'find "TODO" | sort | unique | take 10' src/
 
 # Validate syntax without executing
-atp query --validate 'find "X" | sort desc | take 5'
+itp query --validate 'find "X" | sort desc | take 5'
 
 # Explain what a query will do
-atp query --explain 'find "error" | replace "error" with "warning" all | count'
+itp query --explain 'find "error" | replace "error" with "warning" all | count'
 ```
 
 **Key Design Principles:**
@@ -291,19 +291,19 @@ See [SYNTAX.md](SYNTAX.md) for the complete grammar, stage reference, and compar
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│                       ATP Ecosystem                          │
+│                       ITP Ecosystem                          │
 ├─────────┬─────────┬─────────┬──────────┬─────────┬──────────┤
-│  atp    │ atp-tui │ atp-gui │ atp-wasm │ atp-lsp │  Agent   │
+│  itp    │ itp-tui │ itp-gui │ itp-wasm │ itp-lsp │  Agent   │
 │  (CLI)  │  (TUI)  │  (GUI)  │  (WASM)  │  (LSP)  │via JSON  │
 ├─────────┴─────────┴─────────┴──────────┴─────────┴──────────┤
 │            POSIX Compatibility Binaries                      │
 │  ┌───────────┐ ┌───────────┐ ┌───────────┐                  │
-│  │ atp-grep  │ │ atp-sed   │ │ atp-awk   │                  │
+│  │ itp-grep  │ │ itp-sed   │ │ itp-awk   │                  │
 │  └─────┬─────┘ └─────┬─────┘ └─────┬─────┘                  │
 │        └──────────────┼──────────────┘                        │
 │                  compat.rs                                    │
 ├──────────────────────────────────────────────────────────────┤
-│                       atp-core                                │
+│                       itp-core                                │
 │  ┌───────────────────────────────────────────────────────┐   │
 │  │              AQL Engine (Unified)                      │   │
 │  │   Tokenizer → Parser → AST → Evaluator                │   │
@@ -355,12 +355,12 @@ See [SYNTAX.md](SYNTAX.md) for the complete grammar, stage reference, and compar
 
 | Crate          | Binary                                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | -------------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`atp-core`** | *(library)*                             | Core library: 79 modules — engines, AQL, ontology, output, compliance, plugins, telemetry, tracing, streaming, code intel, index, DAP, WASM, notebooks, distributed, cache, diff, profile, schema, optimizer, rate-limit, git-search, snapshot, task-queue, patterns, checkpoint, log-sink, redact, dep-graph, template, workspace, hooks, metrics, rule-engine, formatter, scheduler, encryption, changelog, linter, data-table, rewrite, archive, report, converter, statistics, state-machine, i18n, batch, annotation, highlight, timeline, tree, validator, codec, fingerprint, markdown, sampler, tokenizer, spellcheck, calendar, compress, color, macro-engine, fuzzy, summarizer, casing, text-wrap, mime, graph, shell, url, table-extract, emoji |
-| **`atp-cli`**  | `atp`, `atp-grep`, `atp-sed`, `atp-awk` | CLI with 28 subcommands + POSIX-compatible binaries                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| **`atp-tui`**  | `atp-tui`                               | Terminal UI with 10 tabs: Search, Transform, Analyze, Pipeline, AQL, Symbols, Index, Debug, Notebook, Distributed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| **`atp-gui`**  | `atp-gui`                               | Desktop GUI with visual search, pipeline builder, and results viewer                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| **`atp-wasm`** | *(npm package)*                         | WebAssembly bindings for browser and Node.js usage                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| **`atp-lsp`**  | `atp-lsp`                               | Language Server Protocol v2: diagnostics, hover, completion, workspace symbols, notebook support                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| **`itp-core`** | *(library)*                             | Core library: 79 modules — engines, AQL, ontology, output, compliance, plugins, telemetry, tracing, streaming, code intel, index, DAP, WASM, notebooks, distributed, cache, diff, profile, schema, optimizer, rate-limit, git-search, snapshot, task-queue, patterns, checkpoint, log-sink, redact, dep-graph, template, workspace, hooks, metrics, rule-engine, formatter, scheduler, encryption, changelog, linter, data-table, rewrite, archive, report, converter, statistics, state-machine, i18n, batch, annotation, highlight, timeline, tree, validator, codec, fingerprint, markdown, sampler, tokenizer, spellcheck, calendar, compress, color, macro-engine, fuzzy, summarizer, casing, text-wrap, mime, graph, shell, url, table-extract, emoji |
+| **`itp-cli`**  | `itp`, `itp-grep`, `itp-sed`, `itp-awk` | CLI with 28 subcommands + POSIX-compatible binaries                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **`itp-tui`**  | `itp-tui`                               | Terminal UI with 10 tabs: Search, Transform, Analyze, Pipeline, AQL, Symbols, Index, Debug, Notebook, Distributed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| **`itp-gui`**  | `itp-gui`                               | Desktop GUI with visual search, pipeline builder, and results viewer                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| **`itp-wasm`** | *(npm package)*                         | WebAssembly bindings for browser and Node.js usage                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| **`itp-lsp`**  | `itp-lsp`                               | Language Server Protocol v2: diagnostics, hover, completion, workspace symbols, notebook support                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 
 ---
 
@@ -371,16 +371,16 @@ See [SYNTAX.md](SYNTAX.md) for the complete grammar, stage reference, and compar
 Every command, parameter, type, and capability is machine-readable:
 
 ```bash
-atp ontology                          # Full ontology
-atp ontology -c search                # Search command spec
-atp ontology -s capabilities          # All capabilities
-atp ontology -s types                 # All output types with schemas
-atp ontology -s errors                # Error taxonomy
+itp ontology                          # Full ontology
+itp ontology -c search                # Search command spec
+itp ontology -s capabilities          # All capabilities
+itp ontology -s types                 # All output types with schemas
+itp ontology -s errors                # Error taxonomy
 ```
 
 ### 2. Strongly Typed Output Envelope
 
-Every ATP output is wrapped in a universal envelope:
+Every ITP output is wrapped in a universal envelope:
 
 ```json
 {
@@ -395,7 +395,7 @@ Every ATP output is wrapped in a universal envelope:
     "files_matched": 7,
     "duration_ms": 15,
     "provenance": {
-      "tool": "atp",
+      "tool": "itp",
       "tool_version": "1.4.0",
       "command": "search",
       "args": ["TODO", "src/"],
@@ -415,8 +415,8 @@ Same inputs always produce the same outputs. The `deterministic` field in every 
 Preview any command's behavior before running it:
 
 ```bash
-atp explain "search 'pattern' src/"
-atp explain "transform -e 's/old/new/g' --in-place src/"
+itp explain "search 'pattern' src/"
+itp explain "transform -e 's/old/new/g' --in-place src/"
 ```
 
 ### 5. Validate Without Executing
@@ -424,9 +424,9 @@ atp explain "transform -e 's/old/new/g' --in-place src/"
 Check patterns, expressions, and pipelines for validity:
 
 ```bash
-atp validate -t pattern 'fn\s+\w+'
-atp validate -t expression 's/old/new/g'
-atp validate -t pipeline 'search:TODO | filter:FIXME | count'
+itp validate -t pattern 'fn\s+\w+'
+itp validate -t expression 's/old/new/g'
+itp validate -t pipeline 'search:TODO | filter:FIXME | count'
 ```
 
 ### 6. Smart Context Extraction
@@ -434,10 +434,10 @@ atp validate -t pipeline 'search:TODO | filter:FIXME | count'
 Go beyond line-based context to extract meaningful code regions:
 
 ```bash
-atp context src/main.rs -L 42 -m function    # Enclosing function
-atp context src/main.rs -L 42 -m block       # Enclosing block
-atp context src/main.rs -L 42 -m indent      # Indentation scope
-atp context src/main.rs -L 42 -m lines -n 10 # Fixed line range
+itp context src/main.rs -L 42 -m function    # Enclosing function
+itp context src/main.rs -L 42 -m block       # Enclosing block
+itp context src/main.rs -L 42 -m indent      # Indentation scope
+itp context src/main.rs -L 42 -m lines -n 10 # Fixed line range
 ```
 
 ### 7. Composable Pipelines
@@ -446,10 +446,10 @@ Chain operations with a simple DSL:
 
 ```bash
 # Find, filter, deduplicate, sort, and take top results
-atp pipeline -e 'search:import | unique | sort | head:20' src/
+itp pipeline -e 'search:import | unique | sort | head:20' src/
 
 # Search, transform, and count
-atp pipeline -e 'search:TODO | transform:s/TODO/DONE/g | count' src/
+itp pipeline -e 'search:TODO | transform:s/TODO/DONE/g | count' src/
 ```
 
 Pipeline stages: `search`, `filter`, `transform`, `analyze`, `sort`, `unique`, `head`, `tail`, `count`
@@ -459,7 +459,7 @@ Pipeline stages: `search`, `filter`, `transform`, `analyze`, `sort`, `unique`, `
 Fine-grained control over which files are processed:
 
 ```bash
-atp scope --include '*.rs' --exclude '*/test/*' --max-depth 5 src/
+itp scope --include '*.rs' --exclude '*/test/*' --max-depth 5 src/
 ```
 
 ### 9. Provenance Tracking
@@ -485,13 +485,13 @@ Built-in support for FIPS 180-4, NIST SP 800-53/800-171, and CMMC 2.0:
 
 ```bash
 # Generate compliance report
-atp compliance report --format json
+itp compliance report --format json
 
 # List CMMC 2.0 controls
-atp compliance controls --level 2
+itp compliance controls --level 2
 
 # Verify file integrity (FIPS SHA-256)
-atp compliance integrity src/ --format json
+itp compliance integrity src/ --format json
 ```
 
 See [COMPLIANCE.md](COMPLIANCE.md) for full regulatory compliance documentation.
@@ -502,18 +502,18 @@ An interactive AQL shell with readline editing and persistent history:
 
 ```bash
 # Start the REPL
-atp repl
+itp repl
 
 # With a specific scope
-atp repl --scope src/ --include '*.rs'
+itp repl --scope src/ --include '*.rs'
 
 # Inside the REPL:
-# atp> find "TODO" ignore_case | count
-# atp> .scope src/
-# atp> .format json-pretty
-# atp> .help
-# atp> .history
-# atp> .quit
+# itp> find "TODO" ignore_case | count
+# itp> .scope src/
+# itp> .format json-pretty
+# itp> .help
+# itp> .history
+# itp> .quit
 ```
 
 Dot-commands: `.help`, `.scope`, `.format`, `.include`, `.exclude`, `.depth`, `.history`, `.status`, `.clear`, `.quit`
@@ -524,15 +524,15 @@ Monitor files for changes and automatically re-run queries:
 
 ```bash
 # Watch for changes and re-run a search
-atp watch 'find "TODO"' src/
+itp watch 'find "TODO"' src/
 
 # With custom debounce and screen clearing
-atp watch 'find "error" ignore_case | count' logs/ --debounce 1000 --clear
+itp watch 'find "error" ignore_case | count' logs/ --debounce 1000 --clear
 ```
 
 ### 14. Plugin System
 
-Extend ATP with custom pipeline stages and output formats via TOML-based plugin manifests:
+Extend ITP with custom pipeline stages and output formats via TOML-based plugin manifests:
 
 ```bash
 # Plugins are loaded from ~/.atp/plugins/*.toml
@@ -586,7 +586,7 @@ All commands support `--format`:
 | CSV         | `--format csv`         | CSV output                               |
 | Human       | `--format human`       | Colored terminal output (default in TTY) |
 
-Auto-detection: ATP outputs JSON when piped to another program, human-readable text when in a terminal.
+Auto-detection: ITP outputs JSON when piped to another program, human-readable text when in a terminal.
 
 ---
 
@@ -626,55 +626,55 @@ Auto-detection: ATP outputs JSON when piped to another program, human-readable t
 
 ## grep/sed/awk Compatibility
 
-ATP maps directly to the classic Unix text processing trinity. If you know grep/sed/awk, you already know ATP.
+ITP maps directly to the classic Unix text processing trinity. If you know grep/sed/awk, you already know ITP.
 
-### grep → `atp search`
+### grep → `itp search`
 
-| grep flag              | ATP equivalent                     | Description                     |
+| grep flag              | ITP equivalent                     | Description                     |
 | ---------------------- | ---------------------------------- | ------------------------------- |
-| `grep -i`              | `atp search -i`                    | Case-insensitive                |
-| `grep -v`              | `atp search -v`                    | Invert match                    |
-| `grep -w`              | `atp search -w`                    | Whole word                      |
-| `grep -c`              | `atp search -c`                    | Count matches per file          |
-| `grep -l`              | `atp search --files-only`          | List filenames with matches     |
-| `grep -L`              | `atp search --files-without-match` | List filenames without matches  |
-| `grep -o`              | `atp search -o`                    | Only matching portion           |
-| `grep -F`              | `atp search -F`                    | Fixed/literal string (no regex) |
+| `grep -i`              | `itp search -i`                    | Case-insensitive                |
+| `grep -v`              | `itp search -v`                    | Invert match                    |
+| `grep -w`              | `itp search -w`                    | Whole word                      |
+| `grep -c`              | `itp search -c`                    | Count matches per file          |
+| `grep -l`              | `itp search --files-only`          | List filenames with matches     |
+| `grep -L`              | `itp search --files-without-match` | List filenames without matches  |
+| `grep -o`              | `itp search -o`                    | Only matching portion           |
+| `grep -F`              | `itp search -F`                    | Fixed/literal string (no regex) |
 | `grep -n`              | *(always on)*                      | Line numbers in every output    |
 | `grep -r`              | *(always on)*                      | Recursive by default            |
-| `grep -A/-B/-C`        | `atp search -A/-B/-C`              | Context lines after/before/both |
-| `grep -m`              | `atp search -m`                    | Max matches                     |
-| `grep -e pat1 -e pat2` | `atp search pat1 -e pat2`          | Multi-pattern (OR)              |
-| `grep --include=*.rs`  | `atp search --include '*.rs'`      | File glob filter                |
+| `grep -A/-B/-C`        | `itp search -A/-B/-C`              | Context lines after/before/both |
+| `grep -m`              | `itp search -m`                    | Max matches                     |
+| `grep -e pat1 -e pat2` | `itp search pat1 -e pat2`          | Multi-pattern (OR)              |
+| `grep --include=*.rs`  | `itp search --include '*.rs'`      | File glob filter                |
 | `grep --color`         | *(auto-detected)*                  | Colored output in TTY           |
 
-### sed → `atp transform`
+### sed → `itp transform`
 
-| sed command                  | ATP equivalent                                               | Description                   |
+| sed command                  | ITP equivalent                                               | Description                   |
 | ---------------------------- | ------------------------------------------------------------ | ----------------------------- |
-| `sed 's/old/new/'`           | `atp transform -e 's/old/new/'`                              | First-occurrence substitution |
-| `sed 's/old/new/g'`          | `atp transform -e 's/old/new/g'`                             | Global substitution           |
-| `sed 's/old/new/gi'`         | `atp transform -e 's/old/new/gi'`                            | Case-insensitive              |
-| `sed '/pat/d'`               | `atp transform --delete 'pat'`                               | Delete matching lines         |
-| `sed -i`                     | `atp transform --in-place`                                   | In-place editing              |
-| `sed -i.bak`                 | `atp transform --in-place --backup bak`                      | In-place with backup          |
-| `sed -e cmd1 -e cmd2`        | `atp transform -e cmd1 -e cmd2`                              | Multiple commands             |
-| `sed '10,20s/a/b/g'`         | `atp transform -e 's/a/b/g' --line-range 10,20`              | Line-range addressing         |
-| `sed '/start/,/end/s/a/b/g'` | `atp transform -e 's/a/b/g' --address-range '/start/,/end/'` | Pattern-range addressing      |
-| `sed 'y/abc/xyz/'`           | `atp transform` (transliterate)                              | Character transliteration     |
-| *(preview only in head)*     | `atp transform` *(dry-run by default)*                       | **Safe by default**           |
+| `sed 's/old/new/'`           | `itp transform -e 's/old/new/'`                              | First-occurrence substitution |
+| `sed 's/old/new/g'`          | `itp transform -e 's/old/new/g'`                             | Global substitution           |
+| `sed 's/old/new/gi'`         | `itp transform -e 's/old/new/gi'`                            | Case-insensitive              |
+| `sed '/pat/d'`               | `itp transform --delete 'pat'`                               | Delete matching lines         |
+| `sed -i`                     | `itp transform --in-place`                                   | In-place editing              |
+| `sed -i.bak`                 | `itp transform --in-place --backup bak`                      | In-place with backup          |
+| `sed -e cmd1 -e cmd2`        | `itp transform -e cmd1 -e cmd2`                              | Multiple commands             |
+| `sed '10,20s/a/b/g'`         | `itp transform -e 's/a/b/g' --line-range 10,20`              | Line-range addressing         |
+| `sed '/start/,/end/s/a/b/g'` | `itp transform -e 's/a/b/g' --address-range '/start/,/end/'` | Pattern-range addressing      |
+| `sed 'y/abc/xyz/'`           | `itp transform` (transliterate)                              | Character transliteration     |
+| *(preview only in head)*     | `itp transform` *(dry-run by default)*                       | **Safe by default**           |
 
-### awk → `atp analyze`
+### awk → `itp analyze`
 
-| awk feature                       | ATP equivalent                     | Description                  |
+| awk feature                       | ITP equivalent                     | Description                  |
 | --------------------------------- | ---------------------------------- | ---------------------------- |
-| `awk -F','`                       | `atp analyze -F ','`               | Field separator              |
-| `awk '{print $1, $3}'`            | `atp analyze -f 1,3`               | Select fields                |
-| `awk '/pat/{print}'`              | `atp analyze -p 'pat'`             | Pattern filtering            |
+| `awk -F','`                       | `itp analyze -F ','`               | Field separator              |
+| `awk '{print $1, $3}'`            | `itp analyze -f 1,3`               | Select fields                |
+| `awk '/pat/{print}'`              | `itp analyze -p 'pat'`             | Pattern filtering            |
 | `awk 'NR'`                        | NR in JSON output                  | Record number (automatic)    |
 | `awk 'NF'`                        | NF in JSON output                  | Number of fields (automatic) |
-| `awk '{sum+=$3}END{print sum}'`   | `atp analyze --aggregate 'sum:3'`  | Aggregation                  |
-| `awk '{count++}END{print count}'` | `atp analyze --aggregate 'count'`  | Count                        |
+| `awk '{sum+=$3}END{print sum}'`   | `itp analyze --aggregate 'sum:3'`  | Aggregation                  |
+| `awk '{count++}END{print count}'` | `itp analyze --aggregate 'count'`  | Count                        |
 | `awk 'sub(pat,repl,$1)'`          | Computed field: `Sub(1,pat,repl)`  | First substitution           |
 | `awk 'gsub(pat,repl,$1)'`         | Computed field: `Gsub(1,pat,repl)` | Global substitution          |
 | `awk 'match($1,pat)'`             | Computed field: `Match(1,pat)`     | Pattern matching             |
@@ -688,63 +688,63 @@ ATP maps directly to the classic Unix text processing trinity. If you know grep/
 
 ```bash
 # 1. Verify the pattern finds the right matches
-atp search 'OldTypeName' src/ --format json | jq '.data.total_matches'
+itp search 'OldTypeName' src/ --format json | jq '.data.total_matches'
 
 # 2. Preview the rename
-atp transform -p 'OldTypeName' -r 'NewTypeName' -g src/ --format json
+itp transform -p 'OldTypeName' -r 'NewTypeName' -g src/ --format json
 
 # 3. Apply with backup
-atp transform -p 'OldTypeName' -r 'NewTypeName' -g --in-place --backup bak src/
+itp transform -p 'OldTypeName' -r 'NewTypeName' -g --in-place --backup bak src/
 ```
 
 ### Example 2: Analyze Code Structure
 
 ```bash
 # Find all function definitions with context
-atp search 'fn\s+\w+' src/ --include '*.rs' --context 2 --format json
+itp search 'fn\s+\w+' src/ --include '*.rs' --context 2 --format json
 
 # Extract function-level context around a specific line
-atp context src/lib.rs -L 42 -m function --format json
+itp context src/lib.rs -L 42 -m function --format json
 
 # Count lines per file
-atp pipeline -e 'search:. | count' src/ --include '*.rs' --format json
+itp pipeline -e 'search:. | count' src/ --include '*.rs' --format json
 ```
 
 ### Example 3: Process Log Files
 
 ```bash
 # Extract error lines and get frequency of error types
-atp analyze -F '\|' -p 'ERROR' --aggregate 'freq:3' app.log --format json
+itp analyze -F '\|' -p 'ERROR' --aggregate 'freq:3' app.log --format json
 
 # Find all unique IP addresses in access logs
-atp pipeline -e 'search:\d+\.\d+\.\d+\.\d+ | unique' access.log
+itp pipeline -e 'search:\d+\.\d+\.\d+\.\d+ | unique' access.log
 ```
 
 ### Example 4: AQL Queries (Recommended)
 
 ```bash
 # Find and count TODO comments across a project
-atp query 'find "TODO" ignore_case | count' src/
+itp query 'find "TODO" ignore_case | count' src/
 
 # Replace a symbol name with validation
-atp query --explain 'replace "oldFunc" with "newFunc" all ignore_case'
-atp query 'replace "oldFunc" with "newFunc" all' src/ --include '*.rs'
+itp query --explain 'replace "oldFunc" with "newFunc" all ignore_case'
+itp query 'replace "oldFunc" with "newFunc" all' src/ --include '*.rs'
 
 # Analyze CSV data: filter rows, sort, take top results
-atp query 'set separator "," | filter field 3 > 100 | sort by field 3 desc numeric | take 10' data.csv
+itp query 'set separator "," | filter field 3 > 100 | sort by field 3 desc numeric | take 10' data.csv
 
 # Multi-stage log analysis in a single query
-atp query 'find "ERROR" ignore_case | set separator "|" | select fields 1, 3 | sort | unique' app.log
+itp query 'find "ERROR" ignore_case | set separator "|" | select fields 1, 3 | sort | unique' app.log
 ```
 
 ---
 
 ## WebAssembly (WASM)
 
-Use ATP directly in the browser or Node.js via the `atp-wasm` package:
+Use ITP directly in the browser or Node.js via the `itp-wasm` package:
 
 ```javascript
-import init, { search, transform, analyze, pipeline, query } from 'atp-wasm';
+import init, { search, transform, analyze, pipeline, query } from 'itp-wasm';
 
 await init();
 
@@ -759,13 +759,13 @@ const transformed = transform('s/old/new/g', 'old text here', '{}');
 const output = query('find "TODO" ignore_case | count', 'input text', '{}');
 ```
 
-Build with: `wasm-pack build src/atp-wasm --target web`
+Build with: `wasm-pack build src/itp-wasm --target web`
 
 ---
 
 ## Language Server Protocol (LSP)
 
-The `atp-lsp` crate provides a Language Server for AQL (v2):
+The `itp-lsp` crate provides a Language Server for AQL (v2):
 
 - **Diagnostics** — real-time syntax error reporting as you type AQL
 - **Notebook diagnostics** — validates AQL blocks inside `.atp.md` Markdown notebooks
@@ -776,19 +776,19 @@ The `atp-lsp` crate provides a Language Server for AQL (v2):
 Start the server:
 
 ```bash
-atp-lsp --stdio
+itp-lsp --stdio
 ```
 
-Configure your editor to use `atp-lsp` as the language server for `.aql` and `.atp.md` files.
+Configure your editor to use `itp-lsp` as the language server for `.aql` and `.atp.md` files.
 
 ---
 
 ## Telemetry & Tracing
 
-ATP includes opt-in usage telemetry and structured tracing:
+ITP includes opt-in usage telemetry and structured tracing:
 
 ```rust
-use atp_core::telemetry;
+use itp_core::telemetry;
 
 // Usage telemetry (disabled by default)
 telemetry::enable_usage_telemetry();
@@ -796,7 +796,7 @@ telemetry::record_usage("search", &["--format", "json"]);
 let events = telemetry::export_usage_events();
 
 // OpenTelemetry-style tracing (v1.4+)
-use atp_core::{init_tracing, TracingConfig, TracingFormat, trace_pipeline_stage, TracedOperation};
+use itp_core::{init_tracing, TracingConfig, TracingFormat, trace_pipeline_stage, TracedOperation};
 
 let config = TracingConfig { enabled: true, format: TracingFormat::Json, ..Default::default() };
 init_tracing(&config).unwrap();
@@ -816,10 +816,10 @@ Telemetry is **disabled by default** and collects no data unless explicitly enab
 
 ## Semantic Search
 
-Beyond regex, ATP supports TF-IDF-based semantic search for natural language queries:
+Beyond regex, ITP supports TF-IDF-based semantic search for natural language queries:
 
 ```rust
-use atp_core::semantic;
+use itp_core::semantic;
 
 let index = semantic::build_index(&documents);
 let results = semantic::search(&index, "error handling patterns", 10);
@@ -831,17 +831,17 @@ Semantic search complements pattern-based search when the exact syntax is unknow
 
 ## Testing
 
-ATP has comprehensive test coverage across all crates:
+ITP has comprehensive test coverage across all crates:
 
 | Crate                    | Tests     | Description                                                                                                                                                                                                                                          |
 | ------------------------ | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `atp-core` (unit)        | 590       | Engines, AQL, output, pipeline, streaming, tracing, config, DAP, WASM, cache, diff, profile, schema, optimizer, rate-limit, git-search, snapshot, task-queue, patterns, checkpoint, log-sink, redact, dep-graph, template, workspace, hooks, metrics |
-| `atp-core` (integration) | 30        | End-to-end workflow tests (grep, AQL, streaming, tracing, WASM, DAP, code intel)                                                                                                                                                                     |
-| `atp-core` (property)    | 11        | Property-based tests (proptest) for grep, sed, AQL                                                                                                                                                                                                   |
-| `atp-lsp`                | 25        | LSP protocol, diagnostics, hover, completion v2, workspace symbols, notebooks                                                                                                                                                                        |
-| `atp-wasm`               | 15        | WASM bindings: search, transform, analyze, pipeline, AQL                                                                                                                                                                                             |
-| `atp-core` (doc)         | 1         | Documentation examples                                                                                                                                                                                                                               |
-| `atp-core` (fuzz)        | 7 targets | AQL, grep, sed, pipeline, config, diff, optimizer                                                                                                                                                                                                    |
+| `itp-core` (unit)        | 590       | Engines, AQL, output, pipeline, streaming, tracing, config, DAP, WASM, cache, diff, profile, schema, optimizer, rate-limit, git-search, snapshot, task-queue, patterns, checkpoint, log-sink, redact, dep-graph, template, workspace, hooks, metrics |
+| `itp-core` (integration) | 30        | End-to-end workflow tests (grep, AQL, streaming, tracing, WASM, DAP, code intel)                                                                                                                                                                     |
+| `itp-core` (property)    | 11        | Property-based tests (proptest) for grep, sed, AQL                                                                                                                                                                                                   |
+| `itp-lsp`                | 25        | LSP protocol, diagnostics, hover, completion v2, workspace symbols, notebooks                                                                                                                                                                        |
+| `itp-wasm`               | 15        | WASM bindings: search, transform, analyze, pipeline, AQL                                                                                                                                                                                             |
+| `itp-core` (doc)         | 1         | Documentation examples                                                                                                                                                                                                                               |
+| `itp-core` (fuzz)        | 7 targets | AQL, grep, sed, pipeline, config, diff, optimizer                                                                                                                                                                                                    |
 | **Total**                | **~590**  | **All passing**                                                                                                                                                                                                                                      |
 
 ```bash
@@ -849,7 +849,7 @@ ATP has comprehensive test coverage across all crates:
 cargo test --workspace
 
 # Run benchmarks
-cargo bench --bench atp_benchmarks
+cargo bench --bench itp_benchmarks
 
 # Lint
 cargo clippy --workspace -- -D warnings
@@ -862,7 +862,7 @@ cargo fmt --check
 
 ## CI/CD
 
-ATP ships with three GitHub Actions workflows:
+ITP ships with three GitHub Actions workflows:
 
 - **`ci.yml`** — 8-job matrix: test, clippy, fmt, doc, MSRV, WASM, benchmarks, integration
 - **`release.yml`** — Automated builds for 7 targets (Linux, macOS, Windows + ARM variants)

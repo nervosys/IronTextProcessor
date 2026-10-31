@@ -30,8 +30,8 @@ jobs:
         run: cargo install cross --git https://github.com/cross-rs/cross
 
       - name: Cross-compile
-        run: cross build --workspace --exclude atp-gui --target ${{ matrix.target }} --release
+        run: cross build --workspace --exclude itp-gui --target ${{ matrix.target }} --release
 
       - name: Cross-test
-        run: cross test --workspace --exclude atp-gui --exclude atp-wasm --target ${{ matrix.target }}
+        run: cross test --workspace --exclude itp-gui --exclude itp-wasm --target ${{ matrix.target }}
         continue-on-error: true

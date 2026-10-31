@@ -1,21 +1,21 @@
 # For AI Agents
 
-ATP is designed for AI agent integration. Every command produces structured, schema-validated output.
+ITP is designed for AI agent integration. Every command produces structured, schema-validated output.
 
 ## Discovery Protocol
 
 ```bash
 # 1. Discover all capabilities (always start here)
-atp ontology --format json
+itp ontology --format json
 
 # 2. Get schema for a specific command
-atp ontology -c search --format json
+itp ontology -c search --format json
 
 # 3. List all available commands
-atp ontology --list
+itp ontology --list
 ```
 
-The ontology endpoint returns a complete machine-readable description of ATP's capabilities, including input/output schemas, supported operations, and examples.
+The ontology endpoint returns a complete machine-readable description of ITP's capabilities, including input/output schemas, supported operations, and examples.
 
 ## Structured Output
 
@@ -32,18 +32,18 @@ All commands support `--format` with these options:
 
 ## Output Envelope
 
-Every JSON/YAML response follows the ATP envelope schema:
+Every JSON/YAML response follows the ITP envelope schema:
 
 ```json
 {
   "$schema": "https://atp.nervosys.com/schemas/v0.1.0/search.json",
-  "atp_version": "0.1.0",
+  "itp_version": "0.1.0",
   "command": "search",
   "timestamp": "2025-01-01T00:00:00Z",
   "data": { ... },
   "metadata": {
     "provenance": {
-      "command_line": "atp search TODO src/",
+      "command_line": "itp search TODO src/",
       "working_directory": "/project"
     }
   }

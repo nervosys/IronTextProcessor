@@ -1,6 +1,6 @@
 # Semantic Search
 
-ATP includes a built-in TF-IDF semantic search engine for finding contextually similar content without exact pattern matching.
+ITP includes a built-in TF-IDF semantic search engine for finding contextually similar content without exact pattern matching.
 
 ## How It Works
 
@@ -13,7 +13,7 @@ The semantic search uses **Term Frequency–Inverse Document Frequency (TF-IDF)*
 ## API Usage (Rust)
 
 ```rust
-use atp_core::semantic::TfIdfIndex;
+use itp_core::semantic::TfIdfIndex;
 
 let mut index = TfIdfIndex::new();
 
@@ -46,7 +46,7 @@ let index = TfIdfIndex::with_stop_words(custom_stops);
 Semantic search is available in the browser via the WASM binding:
 
 ```javascript
-import { semantic_search } from 'atp-wasm';
+import { semantic_search } from 'itp-wasm';
 
 const docs = JSON.stringify([
   { file: "a.rs", line: 1, content: "Rust systems programming" },

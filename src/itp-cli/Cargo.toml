@@ -1,0 +1,54 @@
+[package]
+name = "itp-cli"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+rust-version.workspace = true
+description = "Iron Text Processor — CLI binary"
+
+[[bin]]
+name = "itp"
+path = "src/main.rs"
+
+[[bin]]
+name = "triad"
+path = "src/main.rs"
+
+[[bin]]
+name = "itp-grep"
+path = "src/bin/itp_grep.rs"
+
+[[bin]]
+name = "itp-sed"
+path = "src/bin/itp_sed.rs"
+
+[[bin]]
+name = "itp-awk"
+path = "src/bin/itp_awk.rs"
+
+[dependencies]
+itp-core = { path = "../itp-core", version = "3.0.0" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+serde_yaml = { workspace = true }
+regex = { workspace = true }
+anyhow = { workspace = true }
+chrono = { workspace = true }
+clap = { workspace = true }
+clap_complete = "4"
+clap_mangen = "0.2"
+colored = { workspace = true }
+rustyline = { workspace = true }
+notify = { workspace = true }
+dirs = { workspace = true }
+tempfile = { workspace = true }
+tokio = { workspace = true }
+reqwest = { workspace = true }
+futures = { workspace = true }
+walkdir = { workspace = true }

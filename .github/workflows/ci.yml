@@ -74,7 +74,7 @@ jobs:
         with:
           targets: wasm32-unknown-unknown
       - uses: Swatinem/rust-cache@v2
-      - run: cargo build -p atp-wasm --target wasm32-unknown-unknown
+      - run: cargo build -p itp-wasm --target wasm32-unknown-unknown
 
   msrv:
     name: MSRV (1.75.0)
@@ -104,11 +104,11 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       - name: Run benchmarks
-        run: cargo bench -p atp-core -- --output-format bencher | tee bench-output.txt
+        run: cargo bench -p itp-core -- --output-format bencher | tee bench-output.txt
       - name: Store benchmark result
         uses: benchmark-action/github-action-benchmark@v1
         with:
-          name: ATP Engine Benchmarks
+          name: ITP Engine Benchmarks
           tool: cargo
           output-file-path: bench-output.txt
           github-token: ${{ secrets.GITHUB_TOKEN }}

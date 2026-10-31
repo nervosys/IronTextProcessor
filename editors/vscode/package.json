@@ -1,13 +1,13 @@
 {
-  "name": "atp-aql",
-  "displayName": "ATP — AQL Language Support",
-  "description": "Syntax highlighting and LSP support for AQL (ATP Query Language)",
+  "name": "itp-aql",
+  "displayName": "ITP — AQL Language Support",
+  "description": "Syntax highlighting and LSP support for AQL (ITP Query Language)",
   "version": "1.0.0",
   "publisher": "nervosys",
   "license": "AGPL-3.0-only",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nervosys/AgenticTextProcessor"
+    "url": "https://github.com/nervosys/IronTextProcessor"
   },
   "engines": {
     "vscode": "^1.85.0"
@@ -25,7 +25,7 @@
     "languages": [
       {
         "id": "aql",
-        "aliases": ["AQL", "ATP Query Language"],
+        "aliases": ["AQL", "ITP Query Language"],
         "extensions": [".aql"],
         "configuration": "./language-configuration.json"
       }
@@ -38,19 +38,19 @@
       }
     ],
     "configuration": {
-      "title": "ATP / AQL",
+      "title": "ITP / AQL",
       "properties": {
-        "atp.lspPath": {
+        "itp.lspPath": {
           "type": "string",
-          "default": "atp-lsp",
-          "description": "Path to the atp-lsp binary"
+          "default": "itp-lsp",
+          "description": "Path to the itp-lsp binary"
         },
-        "atp.enableLsp": {
+        "itp.enableLsp": {
           "type": "boolean",
           "default": true,
           "description": "Enable the AQL Language Server"
         },
-        "atp.trace.server": {
+        "itp.trace.server": {
           "type": "string",
           "enum": ["off", "messages", "verbose"],
           "default": "off",

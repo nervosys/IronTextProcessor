@@ -1,23 +1,23 @@
 [workspace]
 members = [
-    "src/atp-core",
-    "src/atp-cli",
-    "src/atp-tui",
-    "src/atp-gui",
-    "src/atp-wasm",
-    "src/atp-lsp",
+    "src/itp-core",
+    "src/itp-cli",
+    "src/itp-tui",
+    "src/itp-gui",
+    "src/itp-wasm",
+    "src/itp-lsp",
 ]
 resolver = "2"
 
 [workspace.package]
-version = "2.0.0"
+version = "3.0.0"
 edition = "2021"
 authors = ["Nervosys"]
 license = "AGPL-3.0-only"
-description = "Agentic Text Processor — an agentic-first successor to grep, sed, and awk"
-repository = "https://github.com/nervosys/AgenticTextProcessor"
-homepage = "https://github.com/nervosys/AgenticTextProcessor"
-documentation = "https://docs.rs/atp-core"
+description = "Iron Text Processor — an agentic-first successor to grep, sed, and awk"
+repository = "https://github.com/nervosys/IronTextProcessor"
+homepage = "https://github.com/nervosys/IronTextProcessor"
+documentation = "https://docs.rs/itp-core"
 readme = "README.md"
 keywords = ["text-processing", "grep", "sed", "awk", "agentic"]
 categories = ["command-line-utilities", "text-processing", "development-tools"]

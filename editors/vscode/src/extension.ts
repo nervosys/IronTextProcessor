@@ -13,13 +13,13 @@ import {
 let client: LanguageClient | undefined;
 
 export function activate(context: ExtensionContext) {
-  const config = workspace.getConfiguration("atp");
+  const config = workspace.getConfiguration("itp");
   const enableLsp = config.get<boolean>("enableLsp", true);
   if (!enableLsp) {
     return;
   }
 
-  const lspPath = config.get<string>("lspPath", "atp-lsp");
+  const lspPath = config.get<string>("lspPath", "itp-lsp");
 
   const serverOptions: ServerOptions = {
     run: { command: lspPath, transport: TransportKind.stdio },
@@ -34,8 +34,8 @@ export function activate(context: ExtensionContext) {
   };
 
   client = new LanguageClient(
-    "atp-lsp",
-    "ATP Language Server",
+    "itp-lsp",
+    "ITP Language Server",
     serverOptions,
     clientOptions
   );

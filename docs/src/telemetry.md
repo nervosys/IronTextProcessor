@@ -1,6 +1,6 @@
 # Telemetry
 
-ATP includes a comprehensive telemetry system for performance monitoring and optional remote usage analytics.
+ITP includes a comprehensive telemetry system for performance monitoring and optional remote usage analytics.
 
 ## Performance Telemetry
 
@@ -9,7 +9,7 @@ Track bottlenecks and throughput across processing phases.
 ### TelemetrySession
 
 ```rust
-use atp_core::telemetry::*;
+use itp_core::telemetry::*;
 
 let mut session = TelemetrySession::new("search");
 
@@ -33,7 +33,7 @@ println!("Total: {} files, {} lines, {} matches",
 ### SharedTelemetry (Thread-Safe)
 
 ```rust
-use atp_core::telemetry::SharedTelemetry;
+use itp_core::telemetry::SharedTelemetry;
 
 let telemetry = SharedTelemetry::new("pipeline");
 
@@ -71,7 +71,7 @@ Reports include:
 Remote telemetry is **disabled by default** and must be explicitly opted in.
 
 ```rust
-use atp_core::telemetry::*;
+use itp_core::telemetry::*;
 
 usage_enable();   // Opt in
 record_command("search", "find \"TODO\"");

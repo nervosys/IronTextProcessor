@@ -1,10 +1,10 @@
 # Plugin System
 
-ATP supports stage and format plugins loaded from TOML manifests.
+ITP supports stage and format plugins loaded from TOML manifests.
 
 ## Overview
 
-Plugins extend ATP with:
+Plugins extend ITP with:
 
 - **Stage plugins**: Custom processing stages for AQL pipelines
 - **Format plugins**: Custom output format templates
@@ -19,10 +19,10 @@ Plugins are discovered from `~/.atp/plugins/` (or `%USERPROFILE%\.atp\plugins\` 
 
 ```bash
 # List installed plugins
-atp plugins
+itp plugins
 
 # Use a format plugin
-atp search "TODO" src/ --format my-custom-format
+itp search "TODO" src/ --format my-custom-format
 ```
 
 See [Writing Plugins](./plugins/writing.md) and [Plugin Manifest](./plugins/manifest.md).

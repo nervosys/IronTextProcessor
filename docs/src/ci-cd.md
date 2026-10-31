@@ -1,6 +1,6 @@
 # CI/CD
 
-ATP uses GitHub Actions for continuous integration and release automation.
+ITP uses GitHub Actions for continuous integration and release automation.
 
 ## CI Pipeline (`.github/workflows/ci.yml`)
 
@@ -38,26 +38,26 @@ Triggered by version tags (`v*.*.*`).
 ### Artifacts
 
 Each target produces:
-- `atp` — main CLI binary
-- `atp-grep` — grep compatibility binary
-- `atp-sed` — sed compatibility binary
-- `atp-awk` — awk compatibility binary
-- `atp-lsp` — LSP server binary
+- `itp` — main CLI binary
+- `itp-grep` — grep compatibility binary
+- `itp-sed` — sed compatibility binary
+- `itp-awk` — awk compatibility binary
+- `itp-lsp` — LSP server binary
 
 All binaries are compressed and uploaded to GitHub Releases.
 
 ### WASM Release
 
-A separate job builds the WASM package with `wasm-pack` and attaches `atp-wasm.tar.gz` to the release.
+A separate job builds the WASM package with `wasm-pack` and attaches `itp-wasm.tar.gz` to the release.
 
 ## Publishing to crates.io
 
 ```bash
 # Publish in dependency order
-cargo publish -p atp-core
-cargo publish -p atp-cli
-cargo publish -p atp-tui
-cargo publish -p atp-gui
-cargo publish -p atp-wasm
-cargo publish -p atp-lsp
+cargo publish -p itp-core
+cargo publish -p itp-cli
+cargo publish -p itp-tui
+cargo publish -p itp-gui
+cargo publish -p itp-wasm
+cargo publish -p itp-lsp
 ```

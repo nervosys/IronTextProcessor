@@ -73,4 +73,4 @@ footer = "\n---\nTotal: {count} matches"
 separator = "\t"
 ```
 
-Use with: `atp search "TODO" src/ --format github-md`
+Use with: `itp search "TODO" src/ --format github-md`

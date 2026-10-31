@@ -61,39 +61,39 @@ jobs:
       - uses: Swatinem/rust-cache@v2
 
       - name: Build release binaries
-        run: cargo build --release --target ${{ matrix.target }} -p atp-cli -p atp-lsp
+        run: cargo build --release --target ${{ matrix.target }} -p itp-cli -p itp-lsp
 
       - name: Package (Unix)
         if: matrix.archive == 'tar.gz'
         run: |
           mkdir -p dist
-          cp target/${{ matrix.target }}/release/atp dist/
-          cp target/${{ matrix.target }}/release/atp-grep dist/ || true
-          cp target/${{ matrix.target }}/release/atp-sed dist/ || true
-          cp target/${{ matrix.target }}/release/atp-awk dist/ || true
-          cp target/${{ matrix.target }}/release/atp-lsp dist/ || true
+          cp target/${{ matrix.target }}/release/itp dist/
+          cp target/${{ matrix.target }}/release/itp-grep dist/ || true
+          cp target/${{ matrix.target }}/release/itp-sed dist/ || true
+          cp target/${{ matrix.target }}/release/itp-awk dist/ || true
+          cp target/${{ matrix.target }}/release/itp-lsp dist/ || true
           cp README.md LICENSE dist/ || true
-          tar czf atp-${{ matrix.target }}.tar.gz -C dist .
+          tar czf itp-${{ matrix.target }}.tar.gz -C dist .
 
       - name: Package (Windows)
         if: matrix.archive == 'zip'
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path dist
-          Copy-Item "target/${{ matrix.target }}/release/atp.exe" dist/
-          Copy-Item "target/${{ matrix.target }}/release/atp-grep.exe" dist/ -ErrorAction SilentlyContinue
-          Copy-Item "target/${{ matrix.target }}/release/atp-sed.exe" dist/ -ErrorAction SilentlyContinue
-          Copy-Item "target/${{ matrix.target }}/release/atp-awk.exe" dist/ -ErrorAction SilentlyContinue
-          Copy-Item "target/${{ matrix.target }}/release/atp-lsp.exe" dist/ -ErrorAction SilentlyContinue
+          Copy-Item "target/${{ matrix.target }}/release/itp.exe" dist/
+          Copy-Item "target/${{ matrix.target }}/release/itp-grep.exe" dist/ -ErrorAction SilentlyContinue
+          Copy-Item "target/${{ matrix.target }}/release/itp-sed.exe" dist/ -ErrorAction SilentlyContinue
+          Copy-Item "target/${{ matrix.target }}/release/itp-awk.exe" dist/ -ErrorAction SilentlyContinue
+          Copy-Item "target/${{ matrix.target }}/release/itp-lsp.exe" dist/ -ErrorAction SilentlyContinue
           Copy-Item "README.md" dist/ -ErrorAction SilentlyContinue
           Copy-Item "LICENSE" dist/ -ErrorAction SilentlyContinue
-          Compress-Archive -Path dist/* -DestinationPath "atp-${{ matrix.target }}.zip"
+          Compress-Archive -Path dist/* -DestinationPath "itp-${{ matrix.target }}.zip"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: atp-${{ matrix.target }}
-          path: atp-${{ matrix.target }}.${{ matrix.archive }}
+          name: itp-${{ matrix.target }}
+          path: itp-${{ matrix.target }}.${{ matrix.archive }}
 
   release:
     name: Create GitHub Release
@@ -121,8 +121,8 @@ jobs:
           targets: wasm32-unknown-unknown
       - name: Install wasm-pack
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
-      - run: wasm-pack build src/atp-wasm --target web --out-dir ../../pkg
+      - run: wasm-pack build src/itp-wasm --target web --out-dir ../../pkg
       - uses: actions/upload-artifact@v4
         with:
-          name: atp-wasm-pkg
+          name: itp-wasm-pkg
           path: pkg/

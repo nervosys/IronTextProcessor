@@ -1,14 +1,14 @@
 # CLI Reference
 
-ATP provides 15 subcommands accessible via the `atp` binary:
+ITP provides 15 subcommands accessible via the `itp` binary:
 
 ## Core Operations
 
 | Command     | Description                              | Alias      |
 | ----------- | ---------------------------------------- | ---------- |
-| `search`    | Search files for patterns (grep)         | `atp-grep` |
-| `transform` | Transform text with substitutions (sed)  | `atp-sed`  |
-| `analyze`   | Analyze structured data (awk)            | `atp-awk`  |
+| `search`    | Search files for patterns (grep)         | `itp-grep` |
+| `transform` | Transform text with substitutions (sed)  | `itp-sed`  |
+| `analyze`   | Analyze structured data (awk)            | `itp-awk`  |
 | `query`     | Execute AQL queries                      |            |
 | `pipeline`  | Run multi-stage pipelines from YAML/JSON |            |
 

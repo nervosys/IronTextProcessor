@@ -1,13 +1,13 @@
 # Output Formats
 
-ATP supports six output formats, selectable via `--format`:
+ITP supports six output formats, selectable via `--format`:
 
 ## JSON (`--format json`)
 
 Compact JSON. Ideal for machine parsing.
 
 ```json
-{"atp_version":"0.1.0","command":"search","data":{"total_matches":3},"metadata":{}}
+{"itp_version":"0.1.0","command":"search","data":{"total_matches":3},"metadata":{}}
 ```
 
 ## JSON Pretty (`--format json-pretty`)
@@ -16,7 +16,7 @@ Human-readable JSON with indentation.
 
 ```json
 {
-  "atp_version": "0.1.0",
+  "itp_version": "0.1.0",
   "command": "search",
   "data": {
     "total_matches": 3
@@ -38,7 +38,7 @@ One JSON object per line. Ideal for streaming and piping.
 YAML output. Good for configuration and human reading.
 
 ```yaml
-atp_version: "0.1.0"
+itp_version: "0.1.0"
 command: search
 data:
   total_matches: 3
@@ -65,19 +65,19 @@ src/lib.rs:10:  // TODO: refactor
 
 ## Envelope Schema
 
-All structured formats (JSON, YAML) wrap results in the ATP envelope:
+All structured formats (JSON, YAML) wrap results in the ITP envelope:
 
 ```json
 {
   "$schema": "https://atp.nervosys.com/schemas/v0.1.0/<command>.json",
-  "atp_version": "0.1.0",
+  "itp_version": "0.1.0",
   "command": "<command>",
   "timestamp": "<ISO 8601>",
   "data": { ... },
   "metadata": {
     "duration_ms": 12,
     "provenance": {
-      "command_line": "atp search TODO src/",
+      "command_line": "itp search TODO src/",
       "working_directory": "/project",
       "input_hash": "sha256:..."
     }

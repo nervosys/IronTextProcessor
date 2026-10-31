@@ -1,4 +1,4 @@
-# AQL — ATP Query Language
+# AQL — ITP Query Language
 
 AQL is a unified, composable syntax for text processing, jointly optimized for AI agents and humans.
 
@@ -18,25 +18,25 @@ AQL replaces the fragmented regex-heavy syntaxes of `grep`, `sed`, and `awk` wit
 
 ```bash
 # Literal search
-atp query 'find "hello world"'
+itp query 'find "hello world"'
 
 # Regex search
-atp query 'find /fn\s+\w+/'
+itp query 'find /fn\s+\w+/'
 
 # Case-insensitive
-atp query 'find "error" ignore_case'
+itp query 'find "error" ignore_case'
 
 # Global replace
-atp query 'replace "old" with "new" all'
+itp query 'replace "old" with "new" all'
 
 # Pipeline
-atp query 'find "TODO" | sort | unique | count'
+itp query 'find "TODO" | sort | unique | count'
 
 # Field processing
-atp query 'set separator "," | select fields 1, 3 | sort by field 1'
+itp query 'set separator "," | select fields 1, 3 | sort by field 1'
 
 # Explain
-atp query --explain 'find "error" | count'
+itp query --explain 'find "error" | count'
 ```
 
 See [Syntax Reference](./aql/syntax.md), [Stages](./aql/stages.md), [Modifiers](./aql/modifiers.md), and [Examples](./aql/examples.md).

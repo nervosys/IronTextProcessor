@@ -1,16 +1,16 @@
-# ATP — Agentic Text Processor
+# ITP — Iron Text Processor
 
 **An agentic-first successor to `grep`, `sed`, and `awk`, combined into one program.**
 
-ATP is designed from the ground up for AI agent operation while remaining fully usable by humans through CLI, TUI, and GUI interfaces.
+ITP is designed from the ground up for AI agent operation while remaining fully usable by humans through CLI, TUI, and GUI interfaces.
 
-## Why ATP?
+## Why ITP?
 
 Traditional Unix text tools (`grep`, `sed`, `awk`) — born at Bell Labs in the 1970s — remain the most powerful text processing trinity on Unix systems. But they were designed for human terminals and shell pipes, producing unstructured text that AI agents cannot reliably parse.
 
-ATP inherits the battle-tested semantics of grep/sed/awk and adds **strongly typed, deterministic, schema-validated output** that AI agents can reliably consume and reason over.
+ITP inherits the battle-tested semantics of grep/sed/awk and adds **strongly typed, deterministic, schema-validated output** that AI agents can reliably consume and reason over.
 
-| Feature          | grep/sed/awk        | **ATP**                                       |
+| Feature          | grep/sed/awk        | **ITP**                                       |
 | ---------------- | ------------------- | --------------------------------------------- |
 | Output format    | Unstructured text   | **Strongly typed JSON/YAML/CSV**              |
 | Self-description | Man pages           | **Machine-readable ontology**                 |
@@ -26,12 +26,12 @@ ATP inherits the battle-tested semantics of grep/sed/awk and adds **strongly typ
 
 | Crate      | Description                                      |
 | ---------- | ------------------------------------------------ |
-| `atp-core` | Library: engines, AQL, telemetry, compliance     |
-| `atp-cli`  | Binary: `atp` + `atp-grep`, `atp-sed`, `atp-awk` |
-| `atp-tui`  | Terminal UI (ratatui)                            |
-| `atp-gui`  | Desktop GUI (egui/eframe)                        |
-| `atp-wasm` | WebAssembly bindings (wasm-bindgen)              |
-| `atp-lsp`  | Language Server Protocol for AQL files           |
+| `itp-core` | Library: engines, AQL, telemetry, compliance     |
+| `itp-cli`  | Binary: `itp` + `itp-grep`, `itp-sed`, `itp-awk` |
+| `itp-tui`  | Terminal UI (ratatui)                            |
+| `itp-gui`  | Desktop GUI (egui/eframe)                        |
+| `itp-wasm` | WebAssembly bindings (wasm-bindgen)              |
+| `itp-lsp`  | Language Server Protocol for AQL files           |
 
 ## Quick Links
 
