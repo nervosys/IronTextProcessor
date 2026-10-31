@@ -5,7 +5,7 @@ Run multi-stage processing pipelines defined in YAML or JSON.
 ## Usage
 
 ```bash
-atp pipeline <DEFINITION_FILE> [PATHS...] [OPTIONS]
+itp pipeline <DEFINITION_FILE> [PATHS...] [OPTIONS]
 ```
 
 ## Pipeline Definition (YAML)
@@ -41,7 +41,7 @@ Pipelines can also be defined inline using the DSL:
 
 ```bash
 # Arrow syntax
-atp pipeline --dsl "search 'TODO' -> sort -> unique -> count" src/
+itp pipeline --dsl "search 'TODO' -> sort -> unique -> count" src/
 ```
 
 ## Output Schema

@@ -1,0 +1,25 @@
+[package]
+name = "itp-gui"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+rust-version.workspace = true
+description = "Iron Text Processor — Graphical User Interface"
+
+[[bin]]
+name = "itp-gui"
+path = "src/main.rs"
+
+[dependencies]
+itp-core = { path = "../itp-core", version = "3.0.0" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+regex = { workspace = true }
+eframe = "0.31"

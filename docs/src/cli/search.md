@@ -5,7 +5,7 @@ Search files for patterns using regular expressions, literal strings, or glob pa
 ## Usage
 
 ```bash
-atp search <PATTERN> [PATHS...] [OPTIONS]
+itp search <PATTERN> [PATHS...] [OPTIONS]
 ```
 
 ## Options
@@ -27,19 +27,19 @@ atp search <PATTERN> [PATHS...] [OPTIONS]
 
 ```bash
 # Basic search
-atp search "TODO" src/
+itp search "TODO" src/
 
 # Case-insensitive with context
-atp search -i "error" logs/ --context 3
+itp search -i "error" logs/ --context 3
 
 # Literal string search
-atp search -L "foo.bar()" src/
+itp search -L "foo.bar()" src/
 
 # JSON output
-atp search "TODO" . --format json
+itp search "TODO" . --format json
 
 # Multiple patterns
-atp search "TODO" src/ --extra-patterns "FIXME,HACK"
+itp search "TODO" src/ --extra-patterns "FIXME,HACK"
 ```
 
 ## Output Schema

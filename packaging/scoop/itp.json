@@ -1,0 +1,41 @@
+{
+  "version": "1.1.0",
+  "description": "Iron Text Processor — an agentic-first successor to grep, sed, and awk",
+  "homepage": "https://github.com/nervosys/IronTextProcessor",
+  "license": "AGPL-3.0-only",
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/nervosys/IronTextProcessor/releases/download/v1.1.0/itp-v1.1.0-x86_64-pc-windows-msvc.zip",
+      "hash": "PLACEHOLDER_SHA256_X86_64_WINDOWS",
+      "bin": [
+        "itp.exe",
+        "itp-grep.exe",
+        "itp-sed.exe",
+        "itp-awk.exe"
+      ]
+    },
+    "arm64": {
+      "url": "https://github.com/nervosys/IronTextProcessor/releases/download/v1.1.0/itp-v1.1.0-aarch64-pc-windows-msvc.zip",
+      "hash": "PLACEHOLDER_SHA256_AARCH64_WINDOWS",
+      "bin": [
+        "itp.exe",
+        "itp-grep.exe",
+        "itp-sed.exe",
+        "itp-awk.exe"
+      ]
+    }
+  },
+  "checkver": {
+    "github": "https://github.com/nervosys/IronTextProcessor"
+  },
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/nervosys/IronTextProcessor/releases/download/v$version/itp-v$version-x86_64-pc-windows-msvc.zip"
+      },
+      "arm64": {
+        "url": "https://github.com/nervosys/IronTextProcessor/releases/download/v$version/itp-v$version-aarch64-pc-windows-msvc.zip"
+      }
+    }
+  }
+}

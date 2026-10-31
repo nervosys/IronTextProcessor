@@ -1,19 +1,19 @@
 # Benchmarks
 
-ATP uses [Criterion.rs](https://github.com/bheisler/criterion.rs) for statistical benchmarking.
+ITP uses [Criterion.rs](https://github.com/bheisler/criterion.rs) for statistical benchmarking.
 
 ## Running Benchmarks
 
 ```bash
 # Run all benchmarks
-cargo bench -p atp-core
+cargo bench -p itp-core
 
 # Run specific benchmark group
-cargo bench -p atp-core -- grep
-cargo bench -p atp-core -- sed
-cargo bench -p atp-core -- awk
-cargo bench -p atp-core -- aql
-cargo bench -p atp-core -- semantic
+cargo bench -p itp-core -- grep
+cargo bench -p itp-core -- sed
+cargo bench -p itp-core -- awk
+cargo bench -p itp-core -- aql
+cargo bench -p itp-core -- semantic
 ```
 
 ## Benchmark Groups

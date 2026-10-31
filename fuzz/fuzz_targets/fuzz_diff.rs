@@ -13,13 +13,13 @@ fuzz_target!(|data: &[u8]| {
             serde_json::from_str::<serde_json::Value>(left_str),
             serde_json::from_str::<serde_json::Value>(right_str),
         ) {
-            let result = atp_core::diff::diff_json(&left, &right);
+            let result = itp_core::diff::diff_json(&left, &right);
             // Try applying the patch back
-            let _ = atp_core::diff::apply_patch(left.clone(), &result.ops);
+            let _ = itp_core::diff::apply_patch(left.clone(), &result.ops);
         }
 
         // Also fuzz text diff
-        let lines = atp_core::diff::diff_text(left_str, right_str);
-        let _ = atp_core::diff::format_unified(&lines);
+        let lines = itp_core::diff::diff_text(left_str, right_str);
+        let _ = itp_core::diff::format_unified(&lines);
     }
 });

@@ -1,5 +1,5 @@
 [package]
-name = "atp-fuzz"
+name = "itp-fuzz"
 version = "0.0.0"
 publish = false
 edition = "2021"
@@ -9,7 +9,7 @@ cargo-fuzz = true
 
 [dependencies]
 libfuzzer-sys = "0.4"
-atp-core = { path = "../src/atp-core" }
+itp-core = { path = "../src/itp-core" }
 serde_json = "1"
 toml = "0.8"
 

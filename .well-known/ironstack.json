@@ -1,12 +1,12 @@
 {
   "ironstack": "1",
-  "id": "atp",
-  "product": "AgenticTextProcessor",
+  "id": "itp",
+  "product": "IronTextProcessor",
   "layer": "tools",
   "role": "Agentic-first text processing.",
   "ontology": {
-    "command": "atp ontology",
-    "document": "src/atp-core/src/ontology.rs",
+    "command": "itp ontology",
+    "document": "src/itp-core/src/ontology.rs",
     "schema": 1
   },
   "capabilities": [
@@ -48,7 +48,7 @@
     },
     {
       "name": "ontology",
-      "description": "Output the complete ATP ontology for agent discovery. Declares: modifies_files=false, deterministic=true.",
+      "description": "Output the complete ITP ontology for agent discovery. Declares: modifies_files=false, deterministic=true.",
       "requires_grant": false,
       "budgeted": false,
       "surfaces": [
@@ -75,7 +75,7 @@
     },
     {
       "name": "query",
-      "description": "Execute AQL (ATP Query Language) queries -- unified syntax for agents and humans. Declares: modifies_files=false, deterministic=true.",
+      "description": "Execute AQL (ITP Query Language) queries -- unified syntax for agents and humans. Declares: modifies_files=false, deterministic=true.",
       "requires_grant": false,
       "budgeted": true,
       "surfaces": [
@@ -110,7 +110,7 @@
       ]
     },
     {
-      "name": "atp-grep",
+      "name": "itp-grep",
       "description": "POSIX grep-compatible binary with typed structured output. Declares: modifies_files=false, deterministic=true.",
       "requires_grant": false,
       "budgeted": false,
@@ -119,7 +119,7 @@
       ]
     },
     {
-      "name": "atp-sed",
+      "name": "itp-sed",
       "description": "POSIX sed-compatible binary with typed structured output. Declares: modifies_files=true, deterministic=true.",
       "requires_grant": true,
       "budgeted": false,
@@ -128,7 +128,7 @@
       ]
     },
     {
-      "name": "atp-awk",
+      "name": "itp-awk",
       "description": "POSIX awk-compatible binary with typed structured output. Declares: modifies_files=false, deterministic=true.",
       "requires_grant": false,
       "budgeted": false,
@@ -174,7 +174,7 @@
     },
     {
       "name": "config",
-      "description": "View and manage ATP configuration. Changes here alter the defaults every later command runs under. Declares: modifies_files=true, deterministic=true.",
+      "description": "View and manage ITP configuration. Changes here alter the defaults every later command runs under. Declares: modifies_files=true, deterministic=true.",
       "requires_grant": true,
       "budgeted": false,
       "surfaces": [
@@ -183,7 +183,7 @@
     },
     {
       "name": "mcp",
-      "description": "Serve the ATP tool surface over JSON-RPC for agents. Runs until stopped, and re-exposes search, transform, query and analyze to whatever connects. Declares: modifies_files=true, deterministic=false.",
+      "description": "Serve the ITP tool surface over JSON-RPC for agents. Runs until stopped, and re-exposes search, transform, query and analyze to whatever connects. Declares: modifies_files=true, deterministic=false.",
       "requires_grant": true,
       "budgeted": true,
       "surfaces": [
@@ -201,7 +201,7 @@
     },
     {
       "name": "remote",
-      "description": "Run ATP commands on remote hosts over SSH. Declared as modifying because what it runs remotely may be transform. Declares: modifies_files=true, deterministic=false.",
+      "description": "Run ITP commands on remote hosts over SSH. Declared as modifying because what it runs remotely may be transform. Declares: modifies_files=true, deterministic=false.",
       "requires_grant": true,
       "budgeted": true,
       "surfaces": [
@@ -219,7 +219,7 @@
     },
     {
       "name": "plugin",
-      "description": "Install, remove, scaffold and validate ATP plugins. Installing puts new code where ATP will load it. Declares: modifies_files=true, deterministic=true.",
+      "description": "Install, remove, scaffold and validate ITP plugins. Installing puts new code where ITP will load it. Declares: modifies_files=true, deterministic=true.",
       "requires_grant": true,
       "budgeted": false,
       "surfaces": [
@@ -263,5 +263,5 @@
       ]
     }
   ],
-  "note": "requires_grant is DERIVED from modifies_files, which ATP declares per command alongside deterministic, supports_dry_run and supports_explain. An earlier version of this file said ATP declared no effect data; that was wrong -- it declared effects for the eleven commands it covered, and I had searched for the wrong field names. The real gap was coverage: eleven of twenty-five subcommands. The fourteen missing included plugin, which installs code where ATP will load it; config, which changes the defaults every later command runs under; remote, which runs ATP over SSH; and mcp, which re-exposes the whole surface over JSON-RPC. A drift test now walks clap's parsed Command, and it found nine of those fourteen after a first pass that had already tried to close the gap -- including one entry named `man` when the command is `manpage`, which would have read as complete and matched nothing. Four commands are declared modifying for a second-order reason, and the descriptions say so: remote, notebook, distributed and mcp do not themselves rewrite files, but each executes pipelines that may contain transform. Declaring them read-only would be true of the command and false of its consequences. The three compatibility shims -- atp-grep, atp-sed, atp-awk -- appear in the ontology but not in the subcommand list, because they are separate binaries. That asymmetry is deliberate and the drift test only checks one direction for that reason. Budgets are judged and mark the commands whose cost scales with the file set scanned or that run until stopped."
+  "note": "requires_grant is DERIVED from modifies_files, which ITP declares per command alongside deterministic, supports_dry_run and supports_explain. An earlier version of this file said ITP declared no effect data; that was wrong -- it declared effects for the eleven commands it covered, and I had searched for the wrong field names. The real gap was coverage: eleven of twenty-five subcommands. The fourteen missing included plugin, which installs code where ITP will load it; config, which changes the defaults every later command runs under; remote, which runs ITP over SSH; and mcp, which re-exposes the whole surface over JSON-RPC. A drift test now walks clap's parsed Command, and it found nine of those fourteen after a first pass that had already tried to close the gap -- including one entry named `man` when the command is `manpage`, which would have read as complete and matched nothing. Four commands are declared modifying for a second-order reason, and the descriptions say so: remote, notebook, distributed and mcp do not themselves rewrite files, but each executes pipelines that may contain transform. Declaring them read-only would be true of the command and false of its consequences. The three compatibility shims -- itp-grep, itp-sed, itp-awk -- appear in the ontology but not in the subcommand list, because they are separate binaries. That asymmetry is deliberate and the drift test only checks one direction for that reason. Budgets are judged and mark the commands whose cost scales with the file set scanned or that run until stopped."
 }

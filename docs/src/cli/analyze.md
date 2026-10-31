@@ -5,7 +5,7 @@ Analyze structured and semi-structured data with field extraction, filtering, an
 ## Usage
 
 ```bash
-atp analyze [PATHS...] [OPTIONS]
+itp analyze [PATHS...] [OPTIONS]
 ```
 
 ## Options
@@ -23,22 +23,22 @@ atp analyze [PATHS...] [OPTIONS]
 
 ```bash
 # Basic CSV analysis
-atp analyze data.csv --separator ','
+itp analyze data.csv --separator ','
 
 # Select fields 1 and 3
-atp analyze data.csv -f 1,3 --separator ','
+itp analyze data.csv -f 1,3 --separator ','
 
 # Filter rows
-atp analyze data.csv --separator ',' --condition '$2 > 25'
+itp analyze data.csv --separator ',' --condition '$2 > 25'
 
 # Count records
-atp analyze data.csv --separator ',' --agg count
+itp analyze data.csv --separator ',' --agg count
 
 # With header row
-atp analyze data.csv --separator ',' --header
+itp analyze data.csv --separator ',' --header
 
 # JSON output
-atp analyze data.csv --separator ',' --format json
+itp analyze data.csv --separator ',' --format json
 ```
 
 ## Output Schema

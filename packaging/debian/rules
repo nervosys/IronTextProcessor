@@ -7,10 +7,10 @@ override_dh_auto_build:
 	cargo build --release --workspace
 
 override_dh_auto_install:
-	install -Dm755 target/release/atp $(DESTDIR)/usr/bin/atp
-	install -Dm755 target/release/atp-grep $(DESTDIR)/usr/bin/atp-grep
-	install -Dm755 target/release/atp-sed $(DESTDIR)/usr/bin/atp-sed
-	install -Dm755 target/release/atp-awk $(DESTDIR)/usr/bin/atp-awk
+	install -Dm755 target/release/itp $(DESTDIR)/usr/bin/itp
+	install -Dm755 target/release/itp-grep $(DESTDIR)/usr/bin/itp-grep
+	install -Dm755 target/release/itp-sed $(DESTDIR)/usr/bin/itp-sed
+	install -Dm755 target/release/itp-awk $(DESTDIR)/usr/bin/itp-awk
 
 override_dh_auto_test:
 	cargo test --workspace

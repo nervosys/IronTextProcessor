@@ -1,6 +1,6 @@
 #![no_main]
 
-use atp_core::engine::sed::{SedConfig, SedEngine, TransformCommand};
+use itp_core::engine::sed::{SedConfig, SedEngine, TransformCommand};
 use libfuzzer_sys::fuzz_target;
 use std::io::Cursor;
 

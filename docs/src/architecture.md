@@ -3,8 +3,8 @@
 ## Workspace Structure
 
 ```
-AgenticTextProcessor/
-├── src/atp-core/           # Core library
+IronTextProcessor/
+├── src/itp-core/           # Core library
 │   ├── src/
 │   │   ├── engine/     # Processing engines
 │   │   │   ├── aql.rs  # AQL parser & interpreter
@@ -23,14 +23,14 @@ AgenticTextProcessor/
 │   │   └── traversal.rs # File/directory traversal
 │   ├── benches/        # Criterion benchmarks
 │   └── tests/          # Integration tests
-├── src/atp-cli/            # CLI binary
+├── src/itp-cli/            # CLI binary
 │   ├── src/
 │   │   ├── main.rs     # Entry point & subcommand dispatch
 │   │   └── commands/   # Per-command handlers
-├── src/atp-tui/            # Terminal UI (ratatui)
-├── src/atp-gui/            # Desktop GUI (egui/eframe)
-├── src/atp-wasm/           # WebAssembly bindings
-├── src/atp-lsp/            # LSP server for AQL
+├── src/itp-tui/            # Terminal UI (ratatui)
+├── src/itp-gui/            # Desktop GUI (egui/eframe)
+├── src/itp-wasm/           # WebAssembly bindings
+├── src/itp-lsp/            # LSP server for AQL
 ├── docs/               # mdBook documentation
 └── .github/workflows/  # CI/CD pipelines
 ```
@@ -77,7 +77,7 @@ Input (files/stdin)
 
 ## Test Architecture
 
-- **Unit tests**: In each module (173 tests in atp-core)
+- **Unit tests**: In each module (173 tests in itp-core)
 - **Integration tests**: Cross-module end-to-end tests (21 tests)
 - **WASM tests**: Browser-compatible tests (15 tests)
 - **LSP tests**: Protocol-level tests (15 tests)

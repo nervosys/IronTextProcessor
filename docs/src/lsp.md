@@ -1,11 +1,11 @@
 # LSP Server
 
-The `atp-lsp` crate provides a Language Server Protocol (LSP) server for AQL files.
+The `itp-lsp` crate provides a Language Server Protocol (LSP) server for AQL files.
 
 ## Installation
 
 ```bash
-cargo install --path src/atp-lsp
+cargo install --path src/itp-lsp
 ```
 
 ## Features
@@ -23,7 +23,7 @@ Add to your VS Code `settings.json`:
 
 ```json
 {
-  "aql.lsp.path": "atp-lsp",
+  "aql.lsp.path": "itp-lsp",
   "aql.lsp.args": []
 }
 ```

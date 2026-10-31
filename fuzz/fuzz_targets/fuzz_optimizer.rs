@@ -10,14 +10,14 @@ fuzz_target!(|data: &[u8]| {
             return;
         }
 
-        let stages: Vec<atp_core::optimizer::StageDesc> = stage_names
+        let stages: Vec<itp_core::optimizer::StageDesc> = stage_names
             .iter()
             .enumerate()
-            .map(|(i, name)| atp_core::optimizer::stage_desc(name, i))
+            .map(|(i, name)| itp_core::optimizer::stage_desc(name, i))
             .collect();
 
-        let plan = atp_core::optimizer::optimize(&stages);
-        let _ = atp_core::optimizer::format_plan(&plan);
+        let plan = itp_core::optimizer::optimize(&stages);
+        let _ = itp_core::optimizer::format_plan(&plan);
         let _ = serde_json::to_string(&plan);
     }
 });

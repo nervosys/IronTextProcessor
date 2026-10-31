@@ -1,11 +1,11 @@
 # WASM Integration
 
-The `atp-wasm` crate provides WebAssembly bindings for using ATP in the browser.
+The `itp-wasm` crate provides WebAssembly bindings for using ITP in the browser.
 
 ## Building
 
 ```bash
-cd src/atp-wasm
+cd src/itp-wasm
 wasm-pack build --target web
 ```
 
@@ -18,7 +18,7 @@ All functions accept and return JSON strings:
 ### grep
 
 ```javascript
-import { grep } from 'atp-wasm';
+import { grep } from 'itp-wasm';
 
 const options = JSON.stringify({ case_sensitive: false });
 const result = grep("TODO", fileContent, options);
@@ -29,7 +29,7 @@ console.log(JSON.parse(result));
 ### sed
 
 ```javascript
-import { sed } from 'atp-wasm';
+import { sed } from 'itp-wasm';
 
 const options = JSON.stringify({});
 const result = sed("s/old/new/g", fileContent, options);
@@ -40,7 +40,7 @@ console.log(JSON.parse(result));
 ### awk
 
 ```javascript
-import { awk } from 'atp-wasm';
+import { awk } from 'itp-wasm';
 
 const options = JSON.stringify({ field_separator: ",", has_header: true });
 const result = awk(csvContent, options);
@@ -50,7 +50,7 @@ console.log(JSON.parse(result));
 ### aql
 
 ```javascript
-import { aql } from 'atp-wasm';
+import { aql } from 'itp-wasm';
 
 const result = aql('find "TODO" | count', fileContent);
 console.log(JSON.parse(result));
@@ -59,7 +59,7 @@ console.log(JSON.parse(result));
 ### semantic_search
 
 ```javascript
-import { semantic_search } from 'atp-wasm';
+import { semantic_search } from 'itp-wasm';
 
 const docs = JSON.stringify([
   { file: "a.rs", line: 1, content: "Rust programming" }
@@ -71,17 +71,17 @@ console.log(JSON.parse(result));
 ### ontology
 
 ```javascript
-import { ontology } from 'atp-wasm';
+import { ontology } from 'itp-wasm';
 
 const ont = JSON.parse(ontology());
-console.log(ont.tool);        // "atp"
+console.log(ont.tool);        // "itp"
 console.log(ont.capabilities); // [...]
 ```
 
 ### version
 
 ```javascript
-import { version } from 'atp-wasm';
+import { version } from 'itp-wasm';
 console.log(version()); // "0.1.0"
 ```
 

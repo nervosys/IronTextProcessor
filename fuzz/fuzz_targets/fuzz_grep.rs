@@ -1,7 +1,7 @@
 #![no_main]
 
-use atp_core::engine::grep::{GrepConfig, GrepEngine};
-use atp_core::output::PatternType;
+use itp_core::engine::grep::{GrepConfig, GrepEngine};
+use itp_core::output::PatternType;
 use libfuzzer_sys::fuzz_target;
 use std::io::Cursor;
 

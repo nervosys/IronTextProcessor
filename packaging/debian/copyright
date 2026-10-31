@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: atp
+Upstream-Name: itp
 Upstream-Contact: Nervosys <opensource@nervosys.ai>
-Source: https://github.com/nervosys/AgenticTextProcessor
+Source: https://github.com/nervosys/IronTextProcessor
 
 Files: *
 Copyright: 2026 Nervosys

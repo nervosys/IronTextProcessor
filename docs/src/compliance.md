@@ -1,6 +1,6 @@
 # Compliance
 
-ATP implements compliance features for NIST FIPS, CMMC 2.0, and DoD regulatory requirements.
+ITP implements compliance features for NIST FIPS, CMMC 2.0, and DoD regulatory requirements.
 
 ## FIPS 180-4 SHA-256
 
@@ -8,12 +8,12 @@ All integrity hashing uses FIPS 180-4 compliant SHA-256 via the RustCrypto `sha2
 
 ```bash
 # Generate compliance report
-atp compliance --format json
+itp compliance --format json
 ```
 
 ## CMMC 2.0 Control Mapping
 
-ATP maps its features to CMMC 2.0 controls across multiple domains:
+ITP maps its features to CMMC 2.0 controls across multiple domains:
 
 - **AU (Audit & Accountability)**: Audit logging for all operations
 - **CM (Configuration Management)**: Provenance tracking, dry-run by default
@@ -23,7 +23,7 @@ ATP maps its features to CMMC 2.0 controls across multiple domains:
 
 ## Data Classification
 
-ATP supports CUI marking per NIST SP 800-171:
+ITP supports CUI marking per NIST SP 800-171:
 
 | Classification | Description                             |
 | -------------- | --------------------------------------- |
@@ -37,7 +37,7 @@ ATP supports CUI marking per NIST SP 800-171:
 All operations are auditable through the `AuditLog` system:
 
 ```rust
-use atp_core::compliance::AuditLog;
+use itp_core::compliance::AuditLog;
 
 let mut log = AuditLog::new();
 log.record_file_access("src/main.rs", "read", true);
@@ -50,7 +50,7 @@ let jsonl = log.to_jsonl();
 ## Compliance Report
 
 ```bash
-atp compliance --format json-pretty
+itp compliance --format json-pretty
 ```
 
 Outputs framework summaries, control mappings, cryptographic module details, and data handling policies.

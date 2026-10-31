@@ -6,9 +6,9 @@ use libfuzzer_sys::fuzz_target;
 fuzz_target!(|data: &[u8]| {
     if let Ok(input) = std::str::from_utf8(data) {
         // Try YAML pipeline parsing
-        let _ = atp_core::engine::pipeline::Pipeline::from_yaml(input);
+        let _ = itp_core::engine::pipeline::Pipeline::from_yaml(input);
 
         // Try DSL pipeline parsing
-        let _ = atp_core::engine::pipeline::Pipeline::from_dsl(input);
+        let _ = itp_core::engine::pipeline::Pipeline::from_dsl(input);
     }
 });

@@ -1,6 +1,6 @@
-# ATP Compliance — NIST FIPS, CMMC 2.0, and DoD Regulatory Posture
+# ITP Compliance — NIST FIPS, CMMC 2.0, and DoD Regulatory Posture
 
-This document describes the Agentic Text Processor's (ATP) compliance posture with respect to NIST Federal Information Processing Standards (FIPS), the Cybersecurity Maturity Model Certification (CMMC) 2.0, and other Department of Defense (DoD) relevant regulations.
+This document describes the Iron Text Processor's (ITP) compliance posture with respect to NIST Federal Information Processing Standards (FIPS), the Cybersecurity Maturity Model Certification (CMMC) 2.0, and other Department of Defense (DoD) relevant regulations.
 
 ---
 
@@ -21,9 +21,9 @@ This document describes the Agentic Text Processor's (ATP) compliance posture wi
 
 ## Overview
 
-ATP is a local, offline text processing tool that operates entirely in-memory with no network connections, no persistent storage, and no temporary files. This architecture inherently minimizes attack surface and simplifies compliance posture.
+ITP is a local, offline text processing tool that operates entirely in-memory with no network connections, no persistent storage, and no temporary files. This architecture inherently minimizes attack surface and simplifies compliance posture.
 
-ATP provides **mechanisms** for regulatory compliance — cryptographic hashing, audit logging, CUI marking, and integrity verification. **Organizational policy** determines how these mechanisms are deployed and configured within a regulated environment.
+ITP provides **mechanisms** for regulatory compliance — cryptographic hashing, audit logging, CUI marking, and integrity verification. **Organizational policy** determines how these mechanisms are deployed and configured within a regulated environment.
 
 ## Regulatory Frameworks
 
@@ -39,7 +39,7 @@ ATP provides **mechanisms** for regulatory compliance — cryptographic hashing,
 
 ### Algorithm
 
-ATP uses **SHA-256** (Secure Hash Algorithm 256-bit) as specified by FIPS 180-4 for all integrity verification operations.
+ITP uses **SHA-256** (Secure Hash Algorithm 256-bit) as specified by FIPS 180-4 for all integrity verification operations.
 
 ### Implementation
 
@@ -54,12 +54,12 @@ ATP uses **SHA-256** (Secure Hash Algorithm 256-bit) as specified by FIPS 180-4 
 
 For environments requiring FIPS 140-3 compliance:
 
-1. Deploy ATP on a platform with **OS-level FIPS mode** enabled:
+1. Deploy ITP on a platform with **OS-level FIPS mode** enabled:
    - **Windows**: Enable FIPS mode via Group Policy (`Computer Configuration > Windows Settings > Security Settings > Local Policies > Security Options > "System cryptography: Use FIPS compliant algorithms"`)
    - **RHEL/CentOS**: `fips-mode-setup --enable`
    - **Ubuntu**: Install `ubuntu-fips` package
 2. The OS-level FIPS mode ensures all cryptographic operations route through validated modules
-3. ATP's SHA-256 implementation produces identical output to FIPS-validated implementations (algorithm compliance)
+3. ITP's SHA-256 implementation produces identical output to FIPS-validated implementations (algorithm compliance)
 
 ### Integrity Verification Use Cases
 
@@ -69,7 +69,7 @@ For environments requiring FIPS 140-3 compliance:
 
 ## CMMC 2.0 Control Mapping
 
-ATP maps to the following CMMC 2.0 practices (based on NIST SP 800-171 Rev 2):
+ITP maps to the following CMMC 2.0 practices (based on NIST SP 800-171 Rev 2):
 
 ### Audit & Accountability (AU)
 
@@ -120,14 +120,14 @@ ATP maps to the following CMMC 2.0 practices (based on NIST SP 800-171 Rev 2):
 
 ### Status Legend
 
-- ✅ **Implemented** — Fully implemented in ATP code
+- ✅ **Implemented** — Fully implemented in ITP code
 - ⚠️ **Partial** — Some aspects require external configuration (e.g., SIEM for alerting)
-- 📋 **Policy-Dependent** — ATP provides the mechanism; organizational policy provides the management
+- 📋 **Policy-Dependent** — ITP provides the mechanism; organizational policy provides the management
 - **N/A** — Not applicable to a local text processing tool
 
 ## CUI Data Marking
 
-ATP supports Controlled Unclassified Information (CUI) markings per NIST SP 800-171 §3.1.20 and the DoD CUI Registry.
+ITP supports Controlled Unclassified Information (CUI) markings per NIST SP 800-171 §3.1.20 and the DoD CUI Registry.
 
 ### Classification Levels
 
@@ -149,22 +149,22 @@ ATP supports Controlled Unclassified Information (CUI) markings per NIST SP 800-
 
 ### Usage
 
-Data markings can be attached to any ATP output envelope:
+Data markings can be attached to any ITP output envelope:
 
 ```rust
-use atp_core::compliance::DataMarking;
+use itp_core::compliance::DataMarking;
 
 // Mark output as CUI with Cyber Threat Intelligence category
 let marking = DataMarking::cui(Some("CTI"));
 
 // Attach to envelope
-let envelope = AtpEnvelope::new("search", results, metadata)
+let envelope = ItpEnvelope::new("search", results, metadata)
     .with_data_marking(marking);
 ```
 
 ## Audit Logging
 
-ATP generates structured audit events conforming to NIST SP 800-53 AU-3 (Content of Audit Records) and AU-8 (Time Stamps).
+ITP generates structured audit events conforming to NIST SP 800-53 AU-3 (Content of Audit Records) and AU-8 (Time Stamps).
 
 ### Audit Event Fields
 
@@ -177,7 +177,7 @@ Per AU-3, every event contains:
 | `severity`           | INFO, WARNING, ERROR, CRITICAL                        | AU-3 (what type)  |
 | `category`           | Event category (file_access, command_execution, etc.) | AU-3 (what type)  |
 | `action`             | Human-readable description                            | AU-3 (what)       |
-| `source_component`   | Originating component (e.g., "atp-core")              | AU-3 (where)      |
+| `source_component`   | Originating component (e.g., "itp-core")              | AU-3 (where)      |
 | `outcome`            | success, failure, denied, unknown                     | AU-3 (outcome)    |
 | `details`            | Structured key-value data                             | AU-3 (additional) |
 | `control_references` | CMMC/NIST controls satisfied                          | Traceability      |
@@ -200,7 +200,7 @@ Audit logs export as **JSONL** (one JSON object per line) for SIEM ingestion:
 
 ```bash
 # Export audit log in JSONL format
-atp compliance --controls --format jsonl
+itp compliance --controls --format jsonl
 ```
 
 Each line is a self-contained JSON object parseable by Splunk, Elastic, Azure Sentinel, and other SIEM platforms.
@@ -209,7 +209,7 @@ Each line is a self-contained JSON object parseable by Splunk, Elastic, Azure Se
 
 | Policy                 | Value    | Notes                                                  |
 | ---------------------- | -------- | ------------------------------------------------------ |
-| Network Access         | **None** | ATP operates entirely offline                          |
+| Network Access         | **None** | ITP operates entirely offline                          |
 | Persistent Storage     | **None** | No databases, caches, or state files                   |
 | Temporary Files        | **None** | All processing is in-memory                            |
 | Memory-Only Processing | **Yes**  | Data exists only during execution                      |
@@ -219,7 +219,7 @@ Each line is a self-contained JSON object parseable by Splunk, Elastic, Azure Se
 
 ### Security Implications
 
-1. **No data at rest**: ATP never persists sensitive data beyond the user's existing file system
+1. **No data at rest**: ITP never persists sensitive data beyond the user's existing file system
 2. **No data in transit**: No network connections means no transmission security concerns
 3. **Minimal attack surface**: No listening ports, no IPC, no shared memory
 4. **Deterministic execution**: Same inputs always produce same outputs (reproducibility)
@@ -229,7 +229,7 @@ Each line is a self-contained JSON object parseable by Splunk, Elastic, Azure Se
 
 ### For CMMC Level 1 (Basic Safeguarding of FCI)
 
-ATP meets Level 1 requirements out of the box:
+ITP meets Level 1 requirements out of the box:
 - SI.L1-3.14.1: Input validation on all patterns, expressions, and queries
 - No network exposure, no persistent storage
 
@@ -238,50 +238,50 @@ ATP meets Level 1 requirements out of the box:
 1. Enable OS-level FIPS mode on the deployment platform
 2. Use CUI data markings on output containing controlled information
 3. Direct audit log output to an organizational SIEM
-4. Apply organizational access control policies to ATP binary and processed files
-5. Include ATP in system baseline documentation (use `atp compliance --report`)
+4. Apply organizational access control policies to ITP binary and processed files
+5. Include ITP in system baseline documentation (use `itp compliance --report`)
 
 ### For FIPS 140-3 Environments
 
 1. **Enable OS FIPS mode** (see [Cryptographic Compliance](#cryptographic-compliance-fips-180-4))
-2. **Verify SHA-256 correctness** using `atp compliance --integrity` against known test vectors
-3. **Document** that ATP uses the FIPS 180-4 algorithm via a software implementation that produces correct output; FIPS 140-3 module validation is provided by the platform
+2. **Verify SHA-256 correctness** using `itp compliance --integrity` against known test vectors
+3. **Document** that ITP uses the FIPS 180-4 algorithm via a software implementation that produces correct output; FIPS 140-3 module validation is provided by the platform
 
 ## CLI Usage
 
 ```bash
 # Full compliance report (JSON)
-atp compliance
+itp compliance
 
 # Full compliance report (human-readable)
-atp compliance --format human
+itp compliance --format human
 
 # List all CMMC 2.0 controls
-atp compliance --controls
+itp compliance --controls
 
 # List only implemented controls
-atp compliance --controls -s implemented
+itp compliance --controls -s implemented
 
 # List Audit & Accountability controls
-atp compliance --controls -d AU
+itp compliance --controls -d AU
 
 # SHA-256 file integrity hash
-atp compliance -i src/main.rs
+itp compliance -i src/main.rs
 
 # Multi-file integrity manifest
-atp compliance -i src/main.rs src/lib.rs Cargo.toml
+itp compliance -i src/main.rs src/lib.rs Cargo.toml
 
 # Aliases: cmmc, fips
-atp cmmc --report
-atp fips -i Cargo.lock
+itp cmmc --report
+itp fips -i Cargo.lock
 ```
 
 ## Programmatic API
 
-The `atp_core::compliance` module exposes all compliance types and functions:
+The `itp_core::compliance` module exposes all compliance types and functions:
 
 ```rust
-use atp_core::compliance::{
+use itp_core::compliance::{
     // FIPS 180-4 hashing
     sha256_hash, sha256_hash_file, sha256_hash_files,
     // Audit logging
@@ -314,4 +314,4 @@ let report = generate_compliance_report();
 
 ---
 
-*This document is generated from ATP's compliance module. Run `atp compliance --format human` for the live report.*
+*This document is generated from ITP's compliance module. Run `itp compliance --format human` for the live report.*

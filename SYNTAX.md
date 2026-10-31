@@ -1,4 +1,4 @@
-# AQL — ATP Query Language
+# AQL — ITP Query Language
 
 **A unified, composable syntax for text processing, jointly optimized for AI agents and humans.**
 
@@ -36,9 +36,9 @@ AQL achieves **higher reliability** than regex-based syntax for AI agents becaus
    | Pipeline                | `grep X \| sed 's/a/b/' \| awk '{print $1}'` (3 syntaxes) | `find "X" \| replace "a" with "b" \| select fields 1` (1 syntax) |
    | Complex pipeline        | `grep -i err \| awk -F'                                   | ' '{print $3}' \| sort \| uniq -c \| sort -rn \| head -10`       | `find "err" ignore_case \| set separator "\|" \| select fields 3 \| sort \| unique \| count \| sort desc numeric \| take 10` |
 
-4. **Self-validating**: `atp query --validate` instantly checks syntax. No regex-tool equivalent exists.
+4. **Self-validating**: `itp query --validate` instantly checks syntax. No regex-tool equivalent exists.
 
-5. **Self-explaining**: `atp query --explain` produces natural language descriptions. Agents can verify intent before execution.
+5. **Self-explaining**: `itp query --explain` produces natural language descriptions. Agents can verify intent before execution.
 
 ---
 
@@ -46,28 +46,28 @@ AQL achieves **higher reliability** than regex-based syntax for AI agents becaus
 
 ```bash
 # Literal search (strings in quotes — no escaping needed)
-atp query 'find "hello world"'
+itp query 'find "hello world"'
 
 # Regex search (opt-in with /…/)
-atp query 'find /fn\s+\w+/'
+itp query 'find /fn\s+\w+/'
 
 # Case-insensitive search
-atp query 'find "error" ignore_case'
+itp query 'find "error" ignore_case'
 
 # Global replace
-atp query 'replace "oldName" with "newName" all'
+itp query 'replace "oldName" with "newName" all'
 
 # Pipeline: find → sort → unique → count
-atp query 'find "TODO" | sort | unique | count'
+itp query 'find "TODO" | sort | unique | count'
 
 # Field processing: set separator, select, filter, sort
-atp query 'set separator "," | select fields 1, 3 | filter field 2 > 100 | sort by field 1 desc numeric'
+itp query 'set separator "," | select fields 1, 3 | filter field 2 > 100 | sort by field 1 desc numeric'
 
 # Explain without executing
-atp query --explain 'find "error" | replace "error" with "warning" all'
+itp query --explain 'find "error" | replace "error" with "warning" all'
 
 # Validate syntax
-atp query --validate 'find "X" | sort | take 10'
+itp query --validate 'find "X" | sort | take 10'
 ```
 
 ---
@@ -430,17 +430,17 @@ AQL accepts multiple aliases for most keywords to be forgiving:
 
 ```bash
 # Execute a query
-atp query 'QUERY' [FILES...] [OPTIONS]
+itp query 'QUERY' [FILES...] [OPTIONS]
 
-# Aliases: atp q, atp aql, atp run
-atp q 'find "error" | count' src/
+# Aliases: itp q, itp aql, itp run
+itp q 'find "error" | count' src/
 
 # Options
-atp query --explain 'QUERY'    # Explain without executing
-atp query --validate 'QUERY'   # Validate syntax only
-atp query --include '*.rs' 'QUERY' src/   # File glob filter
-atp query --exclude 'test*' 'QUERY' src/  # Exclude pattern
-atp query -d 3 'QUERY' src/              # Max depth 3
+itp query --explain 'QUERY'    # Explain without executing
+itp query --validate 'QUERY'   # Validate syntax only
+itp query --include '*.rs' 'QUERY' src/   # File glob filter
+itp query --exclude 'test*' 'QUERY' src/  # Exclude pattern
+itp query -d 3 'QUERY' src/              # Max depth 3
 ```
 
 ---

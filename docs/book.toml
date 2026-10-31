@@ -3,8 +3,8 @@ authors = ["Nervosys"]
 language = "en"
 multilingual = false
 src = "src"
-title = "ATP — Agentic Text Processor"
-description = "Documentation for the Agentic Text Processor (ATP)"
+title = "ITP — Iron Text Processor"
+description = "Documentation for the Iron Text Processor (ITP)"
 
 [build]
 build-dir = "../target/book"
@@ -13,5 +13,5 @@ create-missing = false
 [output.html]
 default-theme = "navy"
 preferred-dark-theme = "navy"
-git-repository-url = "https://github.com/nervosys/AgenticTextProcessor"
-edit-url-template = "https://github.com/nervosys/AgenticTextProcessor/edit/main/docs/{path}"
+git-repository-url = "https://github.com/nervosys/IronTextProcessor"
+edit-url-template = "https://github.com/nervosys/IronTextProcessor/edit/main/docs/{path}"

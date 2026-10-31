@@ -5,7 +5,7 @@ Interactive AQL shell for exploratory text processing.
 ## Usage
 
 ```bash
-atp repl [PATHS...]
+itp repl [PATHS...]
 ```
 
 ## Features
@@ -28,15 +28,15 @@ atp repl [PATHS...]
 ## Example Session
 
 ```
-atp> find "TODO"
+itp> find "TODO"
 Found 3 matches in 2 files
 
-atp> find "TODO" | sort | unique
+itp> find "TODO" | sort | unique
 Found 2 unique matches
 
-atp> find "error" ignore_case | count
+itp> find "error" ignore_case | count
 Count: 42
 
-atp> help
+itp> help
 Available AQL stages: find, replace, delete, ...
 ```

@@ -1,6 +1,6 @@
 # Getting Started
 
-ATP provides multiple ways to interact with its text processing capabilities:
+ITP provides multiple ways to interact with its text processing capabilities:
 
 - **CLI** — Command-line interface for scripting and terminal use
 - **TUI** — Terminal-based interactive UI
