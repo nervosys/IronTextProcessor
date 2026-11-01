@@ -5,6 +5,13 @@ All notable changes to the Iron Text Processor (ITP) are documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.1] — 2026-11-01
+
+### Fixed
+
+- `itp-wasm` now compiles for `wasm32-unknown-unknown`: `tokio` and `reqwest` are native-only, so `itp_core::ai`, `async_io` and `StreamingPipeline` are unavailable on wasm.
+- `reqwest` uses rustls instead of OpenSSL, fixing the musl and aarch64 Linux release builds.
+
 ## [3.0.0] — 2026-10-31
 
 ### Breaking
