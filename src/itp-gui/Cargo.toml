@@ -17,7 +17,7 @@ name = "itp-gui"
 path = "src/main.rs"
 
 [dependencies]
-itp-core = { path = "../itp-core", version = "3.0.0" }
+itp-core = { path = "../itp-core", version = "3.0.1" }
 serde = { workspace = true }
 serde_json = { workspace = true }
 anyhow = { workspace = true }

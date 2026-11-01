@@ -16,7 +16,7 @@ description = "WebAssembly bindings for the Iron Text Processor"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-itp-core = { path = "../itp-core", version = "3.0.0" }
+itp-core = { path = "../itp-core", version = "3.0.1" }
 wasm-bindgen = "0.2"
 serde = { workspace = true }
 serde_json = { workspace = true }

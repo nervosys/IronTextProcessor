@@ -558,6 +558,7 @@ impl Default for StreamingConfig {
 
 /// A streaming pipeline that processes records through tokio channels
 /// without materializing the full dataset between stages.
+#[cfg(not(target_arch = "wasm32"))]
 pub struct StreamingPipeline {
     definition: PipelineDefinition,
     config: StreamingConfig,
@@ -574,6 +575,7 @@ pub struct StreamingProgress {
     pub records_emitted: usize,
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 impl StreamingPipeline {
     /// Create a new streaming pipeline from a definition.
     pub fn new(definition: PipelineDefinition, config: StreamingConfig) -> Self {

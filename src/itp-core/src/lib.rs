@@ -4,9 +4,11 @@
 //! Provides strongly typed, deterministic text processing engines
 //! with full ontology support for AI agent discoverability.
 
+#[cfg(not(target_arch = "wasm32"))]
 pub mod ai;
 pub mod annotation;
 pub mod archive;
+#[cfg(not(target_arch = "wasm32"))]
 pub mod async_io;
 pub mod batch;
 pub mod cache;
@@ -84,7 +86,9 @@ pub mod wasm_runtime;
 pub mod workspace;
 
 // Re-export key types at crate root for convenience
+#[cfg(not(target_arch = "wasm32"))]
 pub use ai::{AiBackend, AiConfig, AiEngine, ChatMessage};
+#[cfg(not(target_arch = "wasm32"))]
 pub use async_io::{AsyncGrep, AsyncPipeline, DataSource, StreamProcessor};
 pub use code_intel::{
     build_call_graph, build_scope_tree, CallEdge, CallGraph, CodeIntelligence, IntelBackend,
@@ -110,9 +114,9 @@ pub use distributed::{
 pub use engine::aql::{AqlEngine, AqlPipeline};
 pub use engine::awk::AwkEngine;
 pub use engine::grep::GrepEngine;
-pub use engine::pipeline::{
-    Pipeline, PipelineData, PipelineLine, StreamingConfig, StreamingPipeline,
-};
+#[cfg(not(target_arch = "wasm32"))]
+pub use engine::pipeline::StreamingPipeline;
+pub use engine::pipeline::{Pipeline, PipelineData, PipelineLine, StreamingConfig};
 pub use engine::sed::SedEngine;
 pub use index::{FileEntry, IndexHit, IndexStats, SearchIndex};
 pub use notebook::{CellKind, CellOutput, Notebook, NotebookCell, NotebookRunSummary};

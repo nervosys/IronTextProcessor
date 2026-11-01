@@ -33,7 +33,7 @@ name = "itp-awk"
 path = "src/bin/itp_awk.rs"
 
 [dependencies]
-itp-core = { path = "../itp-core", version = "3.0.0" }
+itp-core = { path = "../itp-core", version = "3.0.1" }
 serde = { workspace = true }
 serde_json = { workspace = true }
 serde_yaml = { workspace = true }
