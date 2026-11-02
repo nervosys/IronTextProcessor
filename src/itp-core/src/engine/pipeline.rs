@@ -4,7 +4,8 @@
 //! with type-checked intermediate results and streaming execution.
 
 use crate::engine::grep::{GrepConfig, GrepEngine};
-use crate::output::{PipelineResults, PipelineStageResult};
+use crate::engine::matcher::{build_matcher, LineMatcher};
+use crate::output::{PatternType, PipelineResults, PipelineStageResult};
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
@@ -320,8 +321,8 @@ impl Pipeline {
             }
 
             PipelineStage::Filter { pattern } => {
-                let re = regex::Regex::new(pattern)?;
-                data.lines.retain(|line| re.is_match(&line.content));
+                let m = choose_matcher(pattern, true)?;
+                data.lines.retain(|line| m.is_match(&line.content));
                 Ok(data)
             }
 
@@ -332,8 +333,8 @@ impl Pipeline {
             } => {
                 let sep_re = regex::Regex::new(field_separator)?;
                 if let Some(pat) = pattern {
-                    let pat_re = regex::Regex::new(pat)?;
-                    data.lines.retain(|line| pat_re.is_match(&line.content));
+                    let m = choose_matcher(pat, true)?;
+                    data.lines.retain(|line| m.is_match(&line.content));
                 }
                 for line in &mut data.lines {
                     let all_fields: Vec<String> =
@@ -429,10 +430,10 @@ impl Pipeline {
 
             PipelineStage::Count { pattern } => {
                 let count = if let Some(pat) = pattern {
-                    let re = regex::Regex::new(pat)?;
+                    let m = choose_matcher(pat, true)?;
                     data.lines
                         .iter()
-                        .filter(|l| re.is_match(&l.content))
+                        .filter(|l| m.is_match(&l.content))
                         .count()
                 } else {
                     data.lines.len()
@@ -739,6 +740,24 @@ impl Pipeline {
     }
 }
 
+/// Choose a line matcher for a user pattern used as a plain `is_match` predicate.
+///
+/// A metacharacter-free pattern matches exactly as a literal, so it takes the
+/// memchr literal path. The literal path is case-sensitive only, so the fast
+/// path is taken only when `case_sensitive` is set; everything else is built
+/// as the regex the pipeline used before.
+fn choose_matcher(pattern: &str, case_sensitive: bool) -> Result<Box<dyn LineMatcher>> {
+    const META: &[char] = &[
+        '\\', '.', '+', '*', '?', '(', ')', '|', '[', ']', '{', '}', '^', '$',
+    ];
+    let plain_literal = case_sensitive && !pattern.is_empty() && !pattern.contains(META);
+    if plain_literal {
+        build_matcher(PatternType::Literal, pattern, &[], true, false, false)
+    } else {
+        build_matcher(PatternType::Regex, pattern, &[], case_sensitive, false, false)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -939,5 +958,80 @@ mod tests {
         let config = StreamingConfig::default();
         assert_eq!(config.channel_capacity, 1024);
         assert_eq!(config.batch_size, 256);
+    }
+}
+
+#[cfg(test)]
+mod choose_matcher_tests {
+    use super::*;
+
+    /// (pattern, line, expected) — `expected` is asserted too, so a parity
+    /// check cannot pass by both sides agreeing on the wrong answer.
+    const CASES: &[(&str, &str, bool)] = &[
+        // Plain literal: present / absent.
+        ("ERROR", "2026 ERROR here", true),
+        ("ERROR", "all good", false),
+        // Literal is case-sensitive: lowercase must not match.
+        ("ERROR", "err", false),
+        // Metachar-free text that a naive check might mistake for a literal.
+        ("hello-world", "say hello-world", true),
+        ("hello-world", "hello world", false),
+        // Metacharacter patterns MUST route through regex.
+        ("a.c", "axc", true),
+        ("a.c", "ac", false),
+        ("^WARN", "WARN x", true),
+        ("^WARN", "x WARN", false),
+        ("a|b", "xbx", true),
+        ("a|b", "xyz", false),
+        ("fo+", "fooo", true),
+        ("fo+", "f", false),
+        // Empty pattern: regex matches every line; must not take the literal path.
+        ("", "anything", true),
+    ];
+
+    #[test]
+    fn parity_with_regex_on_every_case() {
+        for &(pattern, line, expected) in CASES {
+            let regex_hit = regex::Regex::new(pattern).unwrap().is_match(line);
+            let fast_hit = choose_matcher(pattern, true).unwrap().is_match(line);
+            assert_eq!(
+                fast_hit, regex_hit,
+                "parity broke: pattern {pattern:?} line {line:?}"
+            );
+            assert_eq!(
+                regex_hit, expected,
+                "case expectation wrong: pattern {pattern:?} line {line:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn dot_pattern_routes_through_regex_and_matches_axc() {
+        // "a.c" has a metachar, so it must be regex: it matches "axc".
+        // A verbatim-literal route would not match "axc".
+        assert!(choose_matcher("a.c", true).unwrap().is_match("axc"));
+    }
+
+    #[test]
+    fn plain_literal_path_is_taken_for_error() {
+        // Vacuity guard: the fast path must actually match a plain literal
+        // and must not fold case.
+        let m = choose_matcher("ERROR", true).unwrap();
+        assert!(m.is_match("ERROR here"));
+        assert!(!m.is_match("err"));
+    }
+
+    #[test]
+    fn case_insensitive_request_still_folds_case() {
+        // Inert-when-off control: a case-insensitive request must not take the
+        // case-sensitive literal path, so it still folds case.
+        assert!(choose_matcher("error", false).unwrap().is_match("ERROR here"));
+    }
+
+    #[test]
+    fn invalid_regex_still_errors_with_context() {
+        // Anti-overclaim: a broken regex must surface as an error, not a
+        // silent literal match. "(" has a metachar, so it routes to regex.
+        assert!(choose_matcher("(", true).is_err());
     }
 }
