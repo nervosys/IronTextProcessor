@@ -26,6 +26,8 @@ use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
 use std::time::SystemTime;
 
+use crate::engine::matcher::choose_matcher;
+
 /// Metadata for a single indexed file.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FileEntry {
@@ -212,12 +214,12 @@ impl SearchIndex {
 
     /// Search using a regex pattern.
     pub fn search_regex(&self, pattern: &str) -> Result<Vec<IndexHit>> {
-        let re = regex::Regex::new(pattern).context("Invalid regex pattern")?;
+        let m = choose_matcher(pattern, true).context("Invalid regex pattern")?;
         let mut hits = Vec::new();
 
         for (path, content) in &self.content_cache {
             for (i, line) in content.lines().enumerate() {
-                if re.is_match(line) {
+                if m.is_match(line) {
                     hits.push(IndexHit {
                         path: path.clone(),
                         line: i + 1,
@@ -585,6 +587,46 @@ mod tests {
 
         let hits = index.search_regex(r"fn test_\w+").unwrap();
         assert_eq!(hits.len(), 2);
+
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn test_search_regex_literal_fast_path_parity() {
+        let dir = std::env::temp_dir().join("itp_index_literal_fastpath_test");
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        std::fs::write(
+            dir.join("notes.txt"),
+            "TODO: fix parser\nall done here\nTODO later\naxc line\na.c literal\n",
+        )
+        .unwrap();
+
+        let mut index = SearchIndex::new(&dir);
+        index.build().unwrap();
+
+        // Plain literal: finds exactly the lines containing it.
+        let todo = index.search_regex("TODO").unwrap();
+        assert_eq!(todo.len(), 2);
+        assert!(todo.iter().all(|h| h.content.contains("TODO")));
+        assert!(!todo.iter().any(|h| h.content.contains("all done")));
+
+        // Control: a literal that occurs nowhere yields nothing.
+        assert!(index.search_regex("NOT_PRESENT_ANYWHERE").unwrap().is_empty());
+
+        // Metacharacter pattern must route through regex: "a.c" matches "axc"
+        // as well as the verbatim "a.c" line.
+        let dot = index.search_regex("a.c").unwrap();
+        assert_eq!(dot.len(), 2);
+        assert!(dot.iter().any(|h| h.content == "axc line"));
+        assert!(dot.iter().any(|h| h.content == "a.c literal"));
+
+        // Malformed regex still errors with the same message.
+        let err = match index.search_regex("[") {
+            Ok(_) => panic!("malformed regex must not be treated as a literal"),
+            Err(e) => e,
+        };
+        assert!(err.to_string().contains("Invalid regex pattern"), "got: {err}");
 
         let _ = std::fs::remove_dir_all(&dir);
     }

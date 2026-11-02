@@ -10,6 +10,7 @@
 //! - Memory-mapped I/O for large files
 //! - Aho-Corasick automaton for O(n) multi-pattern literal matching
 
+use crate::engine::matcher::{build_matcher, LineMatcher};
 use crate::output::{ContextLine, PatternType, SearchMatch, SearchResults};
 use aho_corasick::AhoCorasick;
 use anyhow::{Context, Result};
@@ -69,6 +70,11 @@ pub struct GrepEngine {
     /// Aho-Corasick automaton for O(n) multi-pattern literal matching.
     /// Built when pattern_type is Literal and there are extra_patterns.
     ac_automaton: Option<AhoCorasick>,
+    /// Non-regex fast path for a single case-sensitive literal with no
+    /// whole-word constraint. When present it supersedes `compiled` for both
+    /// `is_match` and `find`, producing byte-identical results without the
+    /// regex engine. `None` for every other configuration.
+    matcher: Option<Box<dyn LineMatcher>>,
 }
 
 impl GrepEngine {
@@ -132,12 +138,74 @@ impl GrepEngine {
             None
         };
 
+        // Non-regex fast path: a single case-sensitive literal with no
+        // whole-word constraint and no extra patterns. `build_matcher` returns
+        // a `LiteralMatcher` here, which is byte-for-byte parity with the
+        // `compiled` regex above but skips the regex engine per line. Every
+        // other configuration (whole-word, case-insensitive, extras, glob,
+        // regex, semantic) leaves this `None` and keeps the existing paths.
+        let matcher = if config.pattern_type == PatternType::Literal
+            && config.case_sensitive
+            && !config.whole_word
+            && config.extra_patterns.is_empty()
+        {
+            Some(build_matcher(
+                config.pattern_type.clone(),
+                &config.pattern,
+                &[],
+                config.case_sensitive,
+                config.whole_word,
+                config.multiline,
+            )?)
+        } else {
+            None
+        };
+
         Ok(Self {
             config,
             compiled,
             extra_compiled,
             ac_automaton,
+            matcher,
         })
+    }
+
+    /// Does any configured pattern occur in `line`?
+    ///
+    /// Prefers the non-regex literal matcher when one was built, then the
+    /// Aho-Corasick automaton for literal multi-pattern, falling back to the
+    /// primary + extra regexes — the exact three-way precedence the match
+    /// loops used to inline.
+    #[inline]
+    fn line_matches(&self, line: &str) -> bool {
+        if let Some(ref m) = self.matcher {
+            m.is_match(line)
+        } else if let Some(ref ac) = self.ac_automaton {
+            ac.is_match(line)
+        } else {
+            std::iter::once(&self.compiled)
+                .chain(self.extra_compiled.iter())
+                .any(|re| re.is_match(line))
+        }
+    }
+
+    /// Byte ranges of every match on `line`, in output order.
+    ///
+    /// With the literal fast path this is the matcher's ranges; otherwise it is
+    /// the primary + extra regexes' matches concatenated in pattern order —
+    /// identical to the old `for re in &all_patterns { re.find_iter(..) }`.
+    /// Note the Aho-Corasick automaton is used only for `is_match`; matches are
+    /// still enumerated with the regexes, exactly as before.
+    #[inline]
+    fn match_ranges(&self, line: &str) -> Vec<(usize, usize)> {
+        if let Some(ref m) = self.matcher {
+            m.find_ranges(line)
+        } else {
+            std::iter::once(&self.compiled)
+                .chain(self.extra_compiled.iter())
+                .flat_map(|re| re.find_iter(line).map(|mat| (mat.start(), mat.end())))
+                .collect()
+        }
     }
 
     /// Search a single file, returning all matches.
@@ -150,22 +218,12 @@ impl GrepEngine {
         let mut matches = Vec::new();
         let mut byte_offset = 0usize;
 
-        // Collect all regexes (primary + extras) for multi-pattern matching
-        let all_patterns: Vec<&Regex> = std::iter::once(&self.compiled)
-            .chain(self.extra_compiled.iter())
-            .collect();
-
         for (idx, line) in lines.iter().enumerate() {
             let line_number = idx + 1;
 
-            // A line matches if ANY pattern matches.
-            // Use Aho-Corasick automaton for O(n) literal multi-pattern check
-            // when available, falling back to per-regex iteration otherwise.
-            let has_match = if let Some(ref ac) = self.ac_automaton {
-                ac.is_match(line)
-            } else {
-                all_patterns.iter().any(|re| re.is_match(line))
-            };
+            // A line matches if ANY pattern matches — literal fast path,
+            // Aho-Corasick automaton, or per-regex iteration (see line_matches).
+            let has_match = self.line_matches(line);
             let should_include = if self.config.invert_match {
                 !has_match
             } else {
@@ -189,29 +247,27 @@ impl GrepEngine {
                         byte_offset,
                     });
                 } else {
-                    // Collect all matches from all patterns on this line
-                    for re in &all_patterns {
-                        for mat in re.find_iter(line) {
-                            let context_before = self.get_context_before(&lines, idx);
-                            let context_after = self.get_context_after(&lines, idx);
-                            let matched_text = mat.as_str().to_string();
-                            matches.push(SearchMatch {
-                                file: file_str.clone(),
-                                line_number,
-                                column_start: mat.start() + 1,
-                                column_end: mat.end() + 1,
-                                // In only-matching mode, line_content shows just the match
-                                line_content: if self.config.only_matching {
-                                    matched_text.clone()
-                                } else {
-                                    line.to_string()
-                                },
-                                matched_text,
-                                context_before,
-                                context_after,
-                                byte_offset: byte_offset + mat.start(),
-                            });
-                        }
+                    // Collect all matches on this line (literal matcher or regexes)
+                    for (ms, me) in self.match_ranges(line) {
+                        let context_before = self.get_context_before(&lines, idx);
+                        let context_after = self.get_context_after(&lines, idx);
+                        let matched_text = line[ms..me].to_string();
+                        matches.push(SearchMatch {
+                            file: file_str.clone(),
+                            line_number,
+                            column_start: ms + 1,
+                            column_end: me + 1,
+                            // In only-matching mode, line_content shows just the match
+                            line_content: if self.config.only_matching {
+                                matched_text.clone()
+                            } else {
+                                line.to_string()
+                            },
+                            matched_text,
+                            context_before,
+                            context_after,
+                            byte_offset: byte_offset + ms,
+                        });
                     }
                 }
 
@@ -288,9 +344,6 @@ impl GrepEngine {
     /// entire input into memory. Ideal for large files or continuous streams.
     pub fn search_reader<R: Read>(&self, reader: R, source_name: &str) -> Result<Vec<SearchMatch>> {
         let buf = BufReader::new(reader);
-        let all_patterns: Vec<&Regex> = std::iter::once(&self.compiled)
-            .chain(self.extra_compiled.iter())
-            .collect();
 
         let ctx_before = self.config.context_before;
         let ctx_after = self.config.context_after;
@@ -324,12 +377,8 @@ impl GrepEngine {
                 .count();
             matches.extend(pending.drain(..drain_count).map(|(m, _)| m));
 
-            // Check if line matches — AC automaton fast path for literals
-            let has_match = if let Some(ref ac) = self.ac_automaton {
-                ac.is_match(&line)
-            } else {
-                all_patterns.iter().any(|re| re.is_match(&line))
-            };
+            // Check if line matches — literal fast path, AC automaton, or regexes
+            let has_match = self.line_matches(&line);
             let should_include = if self.config.invert_match {
                 !has_match
             } else {
@@ -359,26 +408,24 @@ impl GrepEngine {
                     };
                     pending.push((m, ctx_after));
                 } else {
-                    for re in &all_patterns {
-                        for mat in re.find_iter(&line) {
-                            let matched_text = mat.as_str().to_string();
-                            let m = SearchMatch {
-                                file: source_name.to_string(),
-                                line_number,
-                                column_start: mat.start() + 1,
-                                column_end: mat.end() + 1,
-                                line_content: if self.config.only_matching {
-                                    matched_text.clone()
-                                } else {
-                                    line.clone()
-                                },
-                                matched_text,
-                                context_before: context_before.clone(),
-                                context_after: Vec::new(),
-                                byte_offset: byte_offset + mat.start(),
-                            };
-                            pending.push((m, ctx_after));
-                        }
+                    for (ms, me) in self.match_ranges(&line) {
+                        let matched_text = line[ms..me].to_string();
+                        let m = SearchMatch {
+                            file: source_name.to_string(),
+                            line_number,
+                            column_start: ms + 1,
+                            column_end: me + 1,
+                            line_content: if self.config.only_matching {
+                                matched_text.clone()
+                            } else {
+                                line.clone()
+                            },
+                            matched_text,
+                            context_before: context_before.clone(),
+                            context_after: Vec::new(),
+                            byte_offset: byte_offset + ms,
+                        };
+                        pending.push((m, ctx_after));
                     }
                 }
 
@@ -518,17 +565,9 @@ impl GrepEngine {
         let mut matches = Vec::new();
         let mut byte_offset = 0usize;
 
-        let all_patterns: Vec<&Regex> = std::iter::once(&self.compiled)
-            .chain(self.extra_compiled.iter())
-            .collect();
-
         for (idx, line) in lines.iter().enumerate() {
             let line_number = idx + 1;
-            let has_match = if let Some(ref ac) = self.ac_automaton {
-                ac.is_match(line)
-            } else {
-                all_patterns.iter().any(|re| re.is_match(line))
-            };
+            let has_match = self.line_matches(line);
             let should_include = if self.config.invert_match {
                 !has_match
             } else {
@@ -551,27 +590,25 @@ impl GrepEngine {
                         byte_offset,
                     });
                 } else {
-                    for re in &all_patterns {
-                        for mat in re.find_iter(line) {
-                            let context_before = self.get_context_before(&lines, idx);
-                            let context_after = self.get_context_after(&lines, idx);
-                            let matched_text = mat.as_str().to_string();
-                            matches.push(SearchMatch {
-                                file: file_str.clone(),
-                                line_number,
-                                column_start: mat.start() + 1,
-                                column_end: mat.end() + 1,
-                                line_content: if self.config.only_matching {
-                                    matched_text.clone()
-                                } else {
-                                    line.to_string()
-                                },
-                                matched_text,
-                                context_before,
-                                context_after,
-                                byte_offset: byte_offset + mat.start(),
-                            });
-                        }
+                    for (ms, me) in self.match_ranges(line) {
+                        let context_before = self.get_context_before(&lines, idx);
+                        let context_after = self.get_context_after(&lines, idx);
+                        let matched_text = line[ms..me].to_string();
+                        matches.push(SearchMatch {
+                            file: file_str.clone(),
+                            line_number,
+                            column_start: ms + 1,
+                            column_end: me + 1,
+                            line_content: if self.config.only_matching {
+                                matched_text.clone()
+                            } else {
+                                line.to_string()
+                            },
+                            matched_text,
+                            context_before,
+                            context_after,
+                            byte_offset: byte_offset + ms,
+                        });
                     }
                 }
 
@@ -591,7 +628,7 @@ impl GrepEngine {
 }
 
 /// Convert a glob pattern to a regex string.
-fn glob_to_regex(glob: &str) -> String {
+pub(crate) fn glob_to_regex(glob: &str) -> String {
     let mut regex = String::new();
     regex.push('^');
     for ch in glob.chars() {
