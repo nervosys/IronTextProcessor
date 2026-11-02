@@ -205,8 +205,6 @@ pub fn build_matcher(
 /// Callers that previously did `Regex::new(pat).is_match(s)` can switch to
 /// `choose_matcher(pat, true)?.is_match(s)` with identical results.
 ///
-/// Note: `pipeline.rs` and `index.rs` still carry private copies of this logic;
-/// they should be de-duplicated onto this function in a later cleanup.
 pub fn choose_matcher(pattern: &str, case_sensitive: bool) -> Result<Box<dyn LineMatcher>> {
     if takes_literal_fast_path(pattern, case_sensitive) {
         build_matcher(PatternType::Literal, pattern, &[], true, false, false)

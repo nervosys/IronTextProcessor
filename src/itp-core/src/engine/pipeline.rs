@@ -4,8 +4,8 @@
 //! with type-checked intermediate results and streaming execution.
 
 use crate::engine::grep::{GrepConfig, GrepEngine};
-use crate::engine::matcher::{build_matcher, LineMatcher};
-use crate::output::{PatternType, PipelineResults, PipelineStageResult};
+use crate::engine::matcher::choose_matcher;
+use crate::output::{PipelineResults, PipelineStageResult};
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
@@ -737,24 +737,6 @@ impl Pipeline {
         data: PipelineData,
     ) -> Result<PipelineData> {
         self.execute_stage(stage, data)
-    }
-}
-
-/// Choose a line matcher for a user pattern used as a plain `is_match` predicate.
-///
-/// A metacharacter-free pattern matches exactly as a literal, so it takes the
-/// memchr literal path. The literal path is case-sensitive only, so the fast
-/// path is taken only when `case_sensitive` is set; everything else is built
-/// as the regex the pipeline used before.
-fn choose_matcher(pattern: &str, case_sensitive: bool) -> Result<Box<dyn LineMatcher>> {
-    const META: &[char] = &[
-        '\\', '.', '+', '*', '?', '(', ')', '|', '[', ']', '{', '}', '^', '$',
-    ];
-    let plain_literal = case_sensitive && !pattern.is_empty() && !pattern.contains(META);
-    if plain_literal {
-        build_matcher(PatternType::Literal, pattern, &[], true, false, false)
-    } else {
-        build_matcher(PatternType::Regex, pattern, &[], case_sensitive, false, false)
     }
 }
 

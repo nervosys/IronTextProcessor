@@ -26,8 +26,7 @@ use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
 use std::time::SystemTime;
 
-use crate::engine::matcher::{build_matcher, LineMatcher};
-use crate::output::PatternType;
+use crate::engine::matcher::choose_matcher;
 
 /// Metadata for a single indexed file.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -484,22 +483,6 @@ pub enum IndexEventKind {
     Removed,
     /// Index was fully rebuilt.
     Rebuilt,
-}
-
-/// Pick the matcher for a search pattern. A non-empty, metacharacter-free
-/// case-sensitive pattern is a plain substring and takes the literal fast
-/// path; anything else is compiled as a regex. Mirrors
-/// `pipeline.rs::choose_matcher`.
-fn choose_matcher(pattern: &str, case_sensitive: bool) -> Result<Box<dyn LineMatcher>> {
-    const META: &[char] = &[
-        '\\', '.', '+', '*', '?', '(', ')', '|', '[', ']', '{', '}', '^', '$',
-    ];
-    let plain_literal = case_sensitive && !pattern.is_empty() && !pattern.contains(META);
-    if plain_literal {
-        build_matcher(PatternType::Literal, pattern, &[], true, false, false)
-    } else {
-        build_matcher(PatternType::Regex, pattern, &[], case_sensitive, false, false)
-    }
 }
 
 #[cfg(test)]
