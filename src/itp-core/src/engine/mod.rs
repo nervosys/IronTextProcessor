@@ -3,5 +3,6 @@
 pub mod aql;
 pub mod awk;
 pub mod grep;
+pub mod matcher;
 pub mod pipeline;
 pub mod sed;

@@ -2459,6 +2459,7 @@ dependencies = [
  "futures",
  "globset",
  "ignore",
+ "memchr",
  "memmap2",
  "proptest",
  "rayon",
