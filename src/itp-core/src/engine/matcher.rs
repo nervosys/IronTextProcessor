@@ -194,6 +194,36 @@ pub fn build_matcher(
     Ok(Box::new(RegexMatcher::new(compiled)))
 }
 
+/// Canonical "literal or regex" chooser for a bare pattern string.
+///
+/// A pattern that contains no regex metacharacters, is non-empty, and is
+/// case-sensitive matches exactly as a plain substring, so it takes the
+/// [`LiteralMatcher`] fast path (no regex compilation). Anything else — a
+/// metacharacter, an empty pattern, or case-insensitive — is built as a regex
+/// through [`build_matcher`], exactly as `regex::Regex::new` would interpret it.
+///
+/// Callers that previously did `Regex::new(pat).is_match(s)` can switch to
+/// `choose_matcher(pat, true)?.is_match(s)` with identical results.
+///
+/// Note: `pipeline.rs` and `index.rs` still carry private copies of this logic;
+/// they should be de-duplicated onto this function in a later cleanup.
+pub fn choose_matcher(pattern: &str, case_sensitive: bool) -> Result<Box<dyn LineMatcher>> {
+    if takes_literal_fast_path(pattern, case_sensitive) {
+        build_matcher(PatternType::Literal, pattern, &[], true, false, false)
+    } else {
+        build_matcher(PatternType::Regex, pattern, &[], case_sensitive, false, false)
+    }
+}
+
+/// The decision behind [`choose_matcher`]: `true` iff the pattern is a plain,
+/// non-empty, case-sensitive literal with no regex metacharacter.
+fn takes_literal_fast_path(pattern: &str, case_sensitive: bool) -> bool {
+    const META: &[char] = &[
+        '\\', '.', '+', '*', '?', '(', ')', '|', '[', ']', '{', '}', '^', '$',
+    ];
+    case_sensitive && !pattern.is_empty() && !pattern.contains(META)
+}
+
 // ── Tests ───────────────────────────────────────────────────────────────────
 
 #[cfg(test)]
@@ -370,5 +400,60 @@ mod tests {
         let gl = build_matcher(PatternType::Glob, "*.rs", &[], true, false, false).unwrap();
         assert!(gl.is_match("main.rs"));
         assert!(!gl.is_match("main.py"));
+    }
+
+    #[test]
+    fn choose_matcher_plain_literal_takes_fast_path() {
+        // Metacharacter-free, non-empty, case-sensitive -> literal fast path.
+        assert!(takes_literal_fast_path("TODO", true));
+        assert!(takes_literal_fast_path("café", true));
+        // Anti-overclaim: every metachar forces the regex route.
+        assert!(!takes_literal_fast_path("a.c", true));
+        assert!(!takes_literal_fast_path("a*", true));
+        // Empty and case-insensitive always go to regex.
+        assert!(!takes_literal_fast_path("", true));
+        assert!(!takes_literal_fast_path("TODO", false));
+
+        // Parity with the regex the pattern would compile to.
+        let lit = choose_matcher("TODO", true).unwrap();
+        let re = Regex::new("TODO").unwrap();
+        for line in ["a TODO here", "todo lower", "", "TODOS", "no match"] {
+            assert_eq!(lit.is_match(line), re.is_match(line), "line {line:?}");
+        }
+        assert!(lit.is_match("a TODO here"));
+        assert!(!lit.is_match("todo lower"));
+    }
+
+    #[test]
+    fn choose_matcher_metachar_pattern_routes_through_regex() {
+        // "a.c" must be a REGEX here: '.' matches any char, so it hits "axc".
+        // A verbatim literal would miss it.
+        let m = choose_matcher("a.c", true).unwrap();
+        let re = Regex::new("a.c").unwrap();
+        assert!(m.is_match("axc"));
+        assert_eq!(m.is_match("axc"), re.is_match("axc"));
+        assert_eq!(m.is_match("abc"), re.is_match("abc"));
+        assert!(m.is_match("abc"));
+        // Anti-overclaim: it still needs three characters.
+        assert!(!m.is_match("ac"));
+        assert_eq!(m.is_match("ac"), re.is_match("ac"));
+    }
+
+    #[test]
+    fn choose_matcher_empty_pattern_routes_through_regex() {
+        // Empty pattern: regex semantics (matches everything, including "").
+        let m = choose_matcher("", true).unwrap();
+        let re = Regex::new("").unwrap();
+        for line in ["", "abc", "café"] {
+            assert_eq!(m.is_match(line), re.is_match(line), "line {line:?}");
+        }
+        assert!(m.is_match(""));
+    }
+
+    #[test]
+    fn choose_matcher_invalid_regex_is_an_error_not_a_panic() {
+        // Metachar '[' with no closing bracket is an invalid regex: the chooser
+        // returns Err (callers map this to false), never a spurious match.
+        assert!(choose_matcher("[", true).is_err());
     }
 }

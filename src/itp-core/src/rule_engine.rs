@@ -181,7 +181,9 @@ pub struct RuleEngine {
 
 fn evaluate_condition(condition: &Condition, line: &str) -> bool {
     match condition {
-        Condition::Regex(pat) => Regex::new(pat).map(|r| r.is_match(line)).unwrap_or(false),
+        Condition::Regex(pat) => crate::engine::matcher::choose_matcher(pat, true)
+            .map(|m| m.is_match(line))
+            .unwrap_or(false),
         Condition::Contains(s) => line.contains(s.as_str()),
         Condition::StartsWith(s) => line.starts_with(s.as_str()),
         Condition::EndsWith(s) => line.ends_with(s.as_str()),
@@ -193,7 +195,11 @@ fn evaluate_condition(condition: &Condition, line: &str) -> bool {
         Condition::FieldMatches { index, pattern } => line
             .split_whitespace()
             .nth(*index)
-            .and_then(|f| Regex::new(pattern).ok().map(|r| r.is_match(f)))
+            .and_then(|f| {
+                crate::engine::matcher::choose_matcher(pattern, true)
+                    .ok()
+                    .map(|m| m.is_match(f))
+            })
             .unwrap_or(false),
         Condition::LengthExceeds(n) => line.len() > *n,
         Condition::LengthBelow(n) => line.len() < *n,
@@ -726,5 +732,53 @@ mod tests {
         engine.add_rules(vec![r1, r2]);
         assert_eq!(engine.rules_by_tag("security").len(), 1);
         assert_eq!(engine.rules_by_tag("security")[0].id, "r1");
+    }
+
+    #[test]
+    fn test_regex_condition_literal_fast_path_parity() {
+        // Metachar-free pattern: literal fast path. Both polarities.
+        let c = Condition::Regex("TODO".into());
+        assert!(evaluate_condition(&c, "fix this TODO now"));
+        assert!(!evaluate_condition(&c, "nothing to do"));
+        assert!(!evaluate_condition(&c, "todo lowercase"));
+    }
+
+    #[test]
+    fn test_regex_condition_metachar_still_regex() {
+        // "a.c" must route through regex: '.' matches 'x' in "axc".
+        let c = Condition::Regex("a.c".into());
+        assert!(evaluate_condition(&c, "axc"));
+        // Anti-overclaim: the verbatim literal "a.c" is NOT what matches.
+        assert!(evaluate_condition(&c, "abc"));
+        assert!(!evaluate_condition(&c, "ac"));
+    }
+
+    #[test]
+    fn test_regex_condition_invalid_pattern_is_false() {
+        // "[" is an invalid regex: must be false, never a panic or a spurious
+        // literal match on a line that contains '['.
+        let c = Condition::Regex("[".into());
+        assert!(!evaluate_condition(&c, "a [ b"));
+        assert!(!evaluate_condition(&c, "abc"));
+    }
+
+    #[test]
+    fn test_field_matches_literal_fast_path_parity() {
+        // Field 1 is "ERROR"; the metachar-free pattern matches it exactly.
+        let c = Condition::FieldMatches {
+            index: 1,
+            pattern: "ERROR".into(),
+        };
+        assert!(evaluate_condition(&c, "2024 ERROR disk full"));
+        assert!(!evaluate_condition(&c, "2024 WARN ERROR-ish")); // field 1 is WARN
+        // Anti-overclaim: a field that merely contains the text is not a match
+        // when the field itself differs (field-scoped, not line-scoped).
+        assert!(!evaluate_condition(&c, "2024 WARN"));
+        // Out-of-range field index -> false.
+        let far = Condition::FieldMatches {
+            index: 9,
+            pattern: "ERROR".into(),
+        };
+        assert!(!evaluate_condition(&far, "2024 ERROR"));
     }
 }
